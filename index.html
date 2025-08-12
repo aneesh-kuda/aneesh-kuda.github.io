@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aneesh Kuda • Analytics & Strategy</title>
+<link rel="stylesheet" href="styles.css">
+<meta name="description" content="Data/analytics, pricing strategy, and automation. Selected projects, resume, and contact.">
+<meta property="og:title" content="Aneesh Kuda">
+<meta property="og:description" content="Analytics, pricing strategy, and data engineering.">
+<meta property="og:type" content="website">
+<body>
+  <header class="wrap">
+    <h1>Aneesh Kuda</h1>
+    <p class="tag">Analytics, pricing strategy, and data engineering</p>
+    <nav>
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+      <a href="resume.pdf">Resume</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section id="projects">
+      <h2>Selected Projects</h2>
+
+      <article class="card">
+        <h3>Second-Order Prediction Model</h3>
+        <ul>
+          <li><strong>Problem:</strong> Low 60-day repeat rate.</li>
+          <li><strong>Approach:</strong> Feature-engineered 1st-order attributes; trained classifier; deployed score to CRM.</li>
+          <li><strong>Impact:</strong> +12% lift in 60-day repeat rate from targeted lifecycle flows.</li>
+        </ul>
+        <a class="btn" href="projects/second-order/index.html">Read case study →</a>
+      </article>
+
+      <article class="card">
+        <h3>Sales Process Analytics & Dialer Instrumentation</h3>
+        <ul>
+          <li><strong>Problem:</strong> Inconsistent pipeline hygiene and activity logging.</li>
+          <li><strong>Approach:</strong> Defined SLAs, built dashboards, added call/text logging to Salesforce.</li>
+          <li><strong>Impact:</strong> +18% meetings booked; clearer attribution.</li>
+        </ul>
+        <a class="btn" href="projects/sales-ops/index.html">Read case study →</a>
+      </article>
+    </section>
+
+    <section id="about">
+      <h2>About</h2>
+      <p>I turn messy data into clear decisions. Experience across consumer tech: pricing & discount strategy, predictive modeling, data engineering, and ops analytics. Comfortable with SQL, Python, dbt/Snowflake, Power BI/Looker, and lifecycle tooling.</p>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <p>
+        <a href="mailto:aneeshkudaravalli@gmail.com">Email</a> ·
+        <a href="https://www.linkedin.com/">LinkedIn</a> ·
+        <a href="https://github.com/aneesh-kuda">GitHub</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <small>© <span id="y"></span> Aneesh Kuda</small>
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
