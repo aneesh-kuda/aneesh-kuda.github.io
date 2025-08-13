@@ -1,68 +1,149 @@
 <!doctype html>
 <html lang="en">
+<head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aneesh Kuda • Analytics & Strategy</title>
-<link rel="stylesheet" href="styles.css">
-<meta name="description" content="Data/analytics, pricing strategy, and automation. Selected projects, resume, and contact.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aneesh Kuda • Revenue Strategy & GTM</title>
+<meta name="description" content="Revenue strategy, pricing, and GTM ops—powered by analytics. Projects, results, and contact.">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/styles.css">
 <meta property="og:title" content="Aneesh Kuda">
-<meta property="og:description" content="Analytics, pricing strategy, and data engineering.">
+<meta property="og:description" content="Revenue strategy & GTM—powered by analytics.">
 <meta property="og:type" content="website">
+</head>
 <body>
-  <header class="wrap">
-    <h1>Aneesh Kuda</h1>
-    <p class="tag">Analytics, pricing strategy, and data engineering</p>
-    <nav>
-      <a href="#projects">Projects</a>
-      <a href="#about">About</a>
-      <a href="resume.pdf">Resume</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
 
-  <main class="wrap">
-    <section id="projects">
+<!-- ambient gradient -->
+<div aria-hidden="true" class="blob"></div>
+
+<header class="wrap site-header">
+  <a class="logo" href="/">
+    <span class="logo-mark">AK</span>
+    <span class="logo-type">Aneesh Kuda</span>
+  </a>
+  <nav class="nav">
+    <a href="#projects">Projects</a>
+    <a href="#about">About</a>
+    <a href="/resume.pdf" class="btn btn--ghost">Resume</a>
+    <a href="#contact" class="btn">Get in touch</a>
+  </nav>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="wrap hero">
+    <h1>
+      <span class="eyebrow">Revenue Strategy • GTM • Pricing</span>
+      I design programs that grow <span class="accent">revenue</span>—powered by sharp analytics.
+    </h1>
+    <p class="lead">
+      I lead cross-functional initiatives across pricing, lifecycle, and sales operations.
+      My edge: translate data into clear bets, operationalize the plan, and prove impact.
+    </p>
+    <div class="cta">
+      <a class="btn btn--lg" href="#projects">See projects</a>
+      <a class="btn btn--ghost btn--lg" href="/resume.pdf">Download resume</a>
+    </div>
+    <ul class="highlights">
+      <li>+12% 60-day repeat (retention program)</li>
+      <li>+18% meetings booked (sales process tune-up)</li>
+      <li>$MM margin protected (pricing guardrails)</li>
+    </ul>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="wrap section">
+    <div class="section-head">
       <h2>Selected Projects</h2>
+      <p class="kicker">Problem → Bet → Execution → Impact</p>
+    </div>
 
+    <div class="grid">
+      <!-- Retention -->
       <article class="card">
-        <h3>Second-Order Prediction Model</h3>
-        <ul>
-          <li><strong>Problem:</strong> Low 60-day repeat rate.</li>
-          <li><strong>Approach:</strong> Feature-engineered 1st-order attributes; trained classifier; deployed score to CRM.</li>
-          <li><strong>Impact:</strong> +12% lift in 60-day repeat rate from targeted lifecycle flows.</li>
+        <div class="badge">Retention</div>
+        <h3>Repeat Revenue Playbook</h3>
+        <p class="meta">Lifecycle strategy • Segmentation • Activation</p>
+        <p>Rebuilt post-purchase journey to grow second-order revenue with targeted offers and timing.</p>
+        <ul class="bullets">
+          <li>Defined segments by need state & value</li>
+          <li>Sequenced offers across email/SMS/site</li>
+          <li><strong>Impact:</strong> +12% 60-day repeat; CAC payback ↓</li>
         </ul>
-        <a class="btn" href="projects/second-order/index.html">Read case study →</a>
+        <a class="btn btn--link" href="/projects/second-order/">Case study →</a>
       </article>
 
+      <!-- Sales Ops -->
       <article class="card">
-        <h3>Sales Process Analytics & Dialer Instrumentation</h3>
-        <ul>
-          <li><strong>Problem:</strong> Inconsistent pipeline hygiene and activity logging.</li>
-          <li><strong>Approach:</strong> Defined SLAs, built dashboards, added call/text logging to Salesforce.</li>
-          <li><strong>Impact:</strong> +18% meetings booked; clearer attribution.</li>
+        <div class="badge">Sales Ops</div>
+        <h3>Pipeline Hygiene & Dialer Strategy</h3>
+        <p class="meta">Process design • Salesforce • Enablement</p>
+        <p>Standardized SLAs and call/sequence strategy; instrumented attribution for coaching.</p>
+        <ul class="bullets">
+          <li>Lead routing + priority queues for reps</li>
+          <li>Talk track & sequence A/Bs; weekly reviews</li>
+          <li><strong>Impact:</strong> +18% meetings booked; cleaner forecast</li>
         </ul>
-        <a class="btn" href="projects/sales-ops/index.html">Read case study →</a>
+        <a class="btn btn--link" href="/projects/sales-ops/">Read more →</a>
       </article>
-    </section>
 
-    <section id="about">
-      <h2>About</h2>
-      <p>I turn messy data into clear decisions. Experience across consumer tech: pricing & discount strategy, predictive modeling, data engineering, and ops analytics. Comfortable with SQL, Python, dbt/Snowflake, Power BI/Looker, and lifecycle tooling.</p>
-    </section>
+      <!-- Pricing -->
+      <article class="card">
+        <div class="badge">Pricing</div>
+        <h3>Promo Guardrails & Elasticity</h3>
+        <p class="meta">Pricing strategy • Experimentation • Finance</p>
+        <p>Set promo tiers and cadence to grow topline while protecting contribution margin.</p>
+        <ul class="bullets">
+          <li>Elasticity by product & channel</li>
+          <li>Quarterly promo calendar & guardrails</li>
+          <li><strong>Impact:</strong> Revenue ↑; margin $MM protected</li>
+        </ul>
+        <a class="btn btn--link" href="/projects/pricing/">Details →</a>
+      </article>
 
-    <section id="contact">
-      <h2>Contact</h2>
-      <p>
-        <a href="mailto:aneeshkudaravalli@gmail.com">Email</a> ·
-        <a href="https://www.linkedin.com/">LinkedIn</a> ·
-        <a href="https://github.com/aneesh-kuda">GitHub</a>
-      </p>
-    </section>
-  </main>
+      <!-- GTM -->
+      <article class="card">
+        <div class="badge">GTM</div>
+        <h3>Account Scoring & Territory Focus</h3>
+        <p class="meta">TAM • Propensity • Coverage</p>
+        <p>Built an explainable account score to focus rep time on high-yield targets.</p>
+        <ul class="bullets">
+          <li>TAM + signals (fit, intent, engagement)</li>
+          <li>Coverage targets by segment & stage</li>
+          <li><strong>Impact:</strong> Win rate ↑; cycle time ↓</li>
+        </ul>
+        <a class="btn btn--link" href="/projects/account-prioritization/">Overview →</a>
+      </article>
+    </div>
+  </section>
 
-  <footer class="wrap">
-    <small>© <span id="y"></span> Aneesh Kuda</small>
-  </footer>
-  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  <!-- ABOUT -->
+  <section id="about" class="wrap section">
+    <h2>About</h2>
+    <p>
+      I help companies choose the right bets—and land them. My work sits at the intersection of
+      <strong>revenue strategy</strong> (pricing, GTM, lifecycle) and <strong>execution</strong> (process,
+      enablement, light data engineering). I’m fluent in SQL/Python/Snowflake and BI, but my north star
+      is commercial impact: clearer decisions, faster cycles, better unit economics.
+    </p>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="wrap section">
+    <h2>Contact</h2>
+    <p>Open to roles and projects in revenue strategy, pricing, and GTM ops.</p>
+    <p>
+      <a href="mailto:aneeshkudaravalli@gmail.com">Email</a> ·
+      <a href="https://www.linkedin.com/">LinkedIn</a> ·
+      <a href="https://github.com/aneesh-kuda">GitHub</a>
+    </p>
+  </section>
+</main>
+
+<footer class="wrap footer">
+  <small>© <span id="y"></span> Aneesh Kuda • Revenue strategy, powered by analytics.</small>
+</footer>
+
+<script>document.getElementById('y').textContent = new Date().getFullYear();</script>
 </body>
 </html>
