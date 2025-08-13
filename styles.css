@@ -1,32 +1,133 @@
-/* Add an orange gradient to the hero section */
-.hero {
-  padding: 3rem 1.25rem 1.5rem;
-  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
-  color: white;
+/* ====== Brand & Base ====== */
+:root{
+  --orange:#ff7a1a;
+  --orange2:#ffb057;
+  --ink:#111;
+  --muted:#5c5c5c;
+  --bg:#fff8f2;           /* warm, slightly sand-toned */
+  --card:#ffffff;
+  --line:#f1e4d8;
+  --max:1040px;
+  --radius:14px;
+  --ring: 0 0 0 1px var(--line), 0 10px 30px rgba(0,0,0,.04);
 }
-.hero .eyebrow,
-.hero .lead,
-.hero .highlights li {
-  color: white;
+*{box-sizing:border-box}
+html{font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height:1.55}
+body{margin:0; color:var(--ink); background:var(--bg)}
+.wrap{max-width:var(--max); margin:0 auto; padding:1.25rem}
+h1,h2,h3{line-height:1.2; margin:0 0 .5rem}
+h1{font-size:2.2rem}
+h2{font-size:1.6rem}
+h3{font-size:1.2rem}
+p{margin:.5rem 0 1rem}
+a{color:#0a66c2; text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ====== Ornaments (modernized ancient) ====== */
+.bg-layer{position:fixed; inset:0; pointer-events:none; z-index:-1}
+.sunburst{
+  position:absolute; left:-25vmax; top:-20vmax; width:80vmax; height:80vmax;
+  background: radial-gradient(40% 40% at 50% 50%, rgba(255,122,26,.35), transparent 70%);
+  filter: blur(50px) saturate(120%);
 }
-.hero .highlights li {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.3);
+.mandala{
+  position:absolute; right:-15vmax; bottom:-10vmax; width:60vmax; height:60vmax;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,176,87,.35) 0 20%, transparent 21%),
+    radial-gradient(circle at 50% 50%, rgba(255,122,26,.25) 0 4%, transparent 5%),
+    repeating-conic-gradient(from 0deg, rgba(255,176,87,.35) 0 10deg, transparent 10deg 20deg);
+  mask: radial-gradient(circle at 50% 50%, black 0 60%, transparent 61%);
+  filter: blur(30px);
+  opacity:.6;
 }
 
-/* Make all buttons orange by default */
-.btn {
-  background: var(--brand);
-  color: white;
-  border: none;
+/* ====== Header ====== */
+.site-header{display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-top:.5rem}
+.logo{display:flex; align-items:center; gap:.6rem; color:var(--ink)}
+.logo-mark{
+  display:grid; place-items:center; width:36px; height:36px; border-radius:10px;
+  background: linear-gradient(135deg, var(--orange), var(--orange2)); color:#fff; font-weight:800;
+  box-shadow: var(--ring);
 }
-.btn:hover {
-  background: var(--brand-2);
-  color: white;
+.logo-type{font-weight:700; letter-spacing:.2px}
+.nav a{margin-left:.9rem}
+.btn{margin-left:.5rem}
+
+/* ====== Hero ====== */
+.hero{
+  position:relative; padding:3rem 1.25rem 2rem; border-radius:var(--radius);
+  background: linear-gradient(135deg, var(--orange), var(--orange2));
+  color:#fff; box-shadow: var(--ring);
+}
+.hero .lead{max-width:62ch}
+.hero .accent{color:#fff; text-decoration:underline; text-decoration-thickness:3px; text-underline-offset:6px}
+.hero-stats{display:flex; gap:1rem; list-style:none; padding:0; margin:1rem 0 0; flex-wrap:wrap}
+.hero-stats li{
+  background: rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3);
+  padding:.45rem .65rem; border-radius:999px; font-size:.95rem;
+}
+.ornate-border{
+  position:absolute; inset:-10px; border-radius:calc(var(--radius) + 10px);
+  background:
+    conic-gradient(from 0deg, rgba(255,255,255,.3), rgba(255,255,255,0), rgba(255,255,255,.3));
+  filter: blur(10px); opacity:.7; z-index:-1;
 }
 
-/* Make blob more visible */
-.blob {
-  opacity: 0.35;
-}
+/* ====== Sections ====== */
+.section{padding:1.8rem 1.25rem}
+.kicker{color:var(--muted); margin:-.25rem 0 1rem}
 
+/* ====== Tiles (Wins) ====== */
+.grid{display:grid; grid-template-columns:repeat(12,1fr); gap:1rem}
+.tile{
+  grid-column:span 4; background:var(--card); border-radius:var(--radius); padding:1rem; box-shadow:var(--ring);
+}
+.tile .meta{color:var(--muted); font-size:.95rem}
+.bullets{margin:.25rem 0 0 1.1rem}
+@media (max-width:980px){ .tile{grid-column:span 6} }
+@media (max-width:680px){ .tile{grid-column:span 12} }
+
+/* ====== Cards (Projects) ====== */
+.section-head{display:flex; align-items:end; justify-content:space-between; gap:1rem}
+.cards{display:grid; grid-template-columns:repeat(12,1fr); gap:1rem; margin-top:1rem}
+.card{
+  grid-column:span 4; background:var(--card); border-radius:var(--radius); padding:1rem; box-shadow:var(--ring);
+  border:1px dashed #ffd7b5; background-image: linear-gradient(transparent, transparent), radial-gradient(#ffe9d6 1px, transparent 1px);
+  background-size: auto, 12px 12px; background-position: 0 0, 0 0;
+}
+.badge{
+  display:inline-block; font-size:.75rem; font-weight:700; letter-spacing:.02em;
+  padding:.25rem .55rem; border-radius:999px; background:#fff3e8; color:var(--orange); border:1px solid #ffd8b0;
+  margin-bottom:.5rem;
+}
+.card .meta{color:var(--muted); font-size:.95rem}
+@media (max-width:980px){ .card{grid-column:span 6} }
+@media (max-width:680px){ .card{grid-column:span 12} }
+
+/* ====== Pillars (Why AI) ====== */
+.pillars{display:grid; grid-template-columns:repeat(12,1fr); gap:1rem; margin-top:1rem}
+.pillar{grid-column:span 4; background:var(--card); border-radius:var(--radius); padding:1rem; box-shadow:var(--ring)}
+@media (max-width:980px){ .pillar{grid-column:span 6} }
+@media (max-width:680px){ .pillar{grid-column:span 12} }
+.roles-intent{margin-top:1rem; color:var(--muted)}
+
+/* ====== Buttons ====== */
+.btn{
+  display:inline-block; padding:.6rem .9rem; border-radius:10px; border:2px solid transparent;
+  font-weight:600; text-decoration:none; transition: transform .05s ease, background .15s ease, color .15s ease, border-color .15s ease;
+}
+.btn:active{transform:translateY(1px)}
+.btn--solid{background:var(--orange); color:#fff}
+.btn--solid:hover{background:var(--orange2); color:#fff}
+.btn--line{border-color:rgba(255,122,26,.4); color:var(--ink); background:rgba(255,122,26,.08)}
+.btn--line:hover{border-color:var(--orange); background:rgba(255,122,26,.15)}
+.btn--ghost{border-color:#fff; color:#fff; background:transparent}
+.btn--ghost:hover{border-color:#fff; background:rgba(255,255,255,.15)}
+
+/* ====== Contact & Footer ====== */
+.contact-links .btn{margin-right:.5rem; margin-bottom:.5rem}
+.footer{padding:2rem 1.25rem 3rem; color:#6a6a6a}
+
+/* ====== Utilities ====== */
+.lead{font-size:1.05rem}
+.lead.tight{max-width:68ch}
