@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Aneesh Kuda</title>
-<meta name="description" content="Revenue-minded operator blending strategy, sales, and analytics. Discovery → decision → measurable outcomes.">
-<link rel="stylesheet" href="styles.css?v=7">
+<meta name="description" content="Strategy × Sales × Analytics. Discovery → Decision → Outcomes.">
+<link rel="stylesheet" href="styles.css?v=8">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.5' cy='.5' r='.6'%3E%3Cstop offset='0' stop-color='%23ff7a1a'/%3E%3Cstop offset='1' stop-color='%23ffb36b'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='48' cy='48' r='46' fill='url(%23g)'/%3E%3Cpath d='M48 18l6 11 12 2-9 9 2 12-11-6-11 6 2-12-9-9 12-2z' fill='white'/%3E%3C/svg%3E">
 <meta property="og:title" content="Aneesh Kuda">
-<meta property="og:description" content="Strategy x Sales x Analytics. Malibu–Hindu modern aesthetic.">
+<meta property="og:description" content="Strategy × Sales × Analytics. Discovery → Decision → Outcomes.">
 <meta property="og:type" content="website">
 </head>
 <body>
 
-<!-- Ambient ornaments (modernized-ancient vibe) -->
+<!-- Ambient ornaments -->
 <div aria-hidden="true" class="bg">
   <div class="sun"></div>
   <div class="mandala"></div>
@@ -28,8 +28,7 @@
   </a>
   <nav class="nav">
     <a href="#about">About</a>
-    <a href="#projects">Projects</a>
-    <a href="#principles">Principles</a>
+    <a href="#timeline">Timeline</a>
     <a href="#contact" class="btn btn--solid">Contact</a>
   </nav>
 </header>
@@ -42,7 +41,7 @@
       <span class="accent">I turn discovery into decisions—and decisions into outcomes.</span>
     </h1>
     <p class="lead">
-      Malibu sun, Hindu geometry. I like clear bets, fast cycles, and measurable impact.
+      Malibu sun, Hindu geometry. Clear bets, fast cycles, measurable impact.
       Technical enough to prototype; commercial enough to land value.
     </p>
     <ul class="hero-stats">
@@ -56,139 +55,36 @@
   <section id="about" class="wrap section">
     <h2>About</h2>
     <p class="about">
-      I’m a revenue-minded operator who thrives at the intersection of <strong>go-to-market strategy</strong>,
-      <strong>sales process</strong>, and <strong>analytics/automation</strong>. I enjoy running
-      crisp discovery, making the bet, and proving impact with clean instrumentation.
-      Tools I use: SQL, Python, Snowflake/dbt, BI. North star: commercial outcomes.
+      Revenue-minded operator at the intersection of <strong>GTM strategy</strong>, <strong>sales process</strong>, and
+      <strong>analytics/automation</strong>. I like crisp discovery, explicit bets, and clean instrumentation so results
+      are obvious. Tools I use: SQL, Python, Snowflake/dbt, BI. North star: commercial outcomes.
     </p>
   </section>
 
+  <!-- TIMELINE -->
+  <section id="timeline" class="wrap section">
+    <h2>Experience Timeline</h2>
+    <p class="kicker">From latest to earliest</p>
 
-  <!-- PROJECTS -->
-  <section id="projects" class="wrap section">
-    <div class="section-head">
-      <h2>Projects</h2>
-      <p class="kicker">Problem → Bet → Execution → Impact</p>
-    </div>
+    <div class="tl">
+      <!-- spine & progress -->
+      <div class="tl-spine" aria-hidden="true">
+        <div class="tl-progress"></div>
+      </div>
 
-    <div class="cards">
-      <article class="card">
-        <span class="badge">GTM</span>
-        <h3>Account Scoring & Territory Focus</h3>
-        <p class="meta">TAM • Propensity • Coverage</p>
-        <p>Explainable account scoring to focus rep time on high-yield targets.</p>
-        <ul class="bullets">
-          <li>Signals: fit, intent, engagement</li>
-          <li>Coverage targets by segment & stage</li>
-          <li><strong>Result:</strong> Win rate ↑; cycle time ↓</li>
-        </ul>
-      </article>
-
-      <article class="card">
-        <span class="badge">Lifecycle</span>
-        <h3>Second-Order Playbook</h3>
-        <p class="meta">Segmentation • Offers • Timing</p>
-        <p>Post-purchase journey rebuilt for second-order lift with timed incentives.</p>
-        <ul class="bullets">
-          <li>Need-state segments</li>
-          <li>Channel mix across email/SMS/site</li>
-          <li><strong>Result:</strong> +12% repeat in 60 days</li>
-        </ul>
-      </article>
-
-      <article class="card">
-        <span class="badge">Ops</span>
-        <h3>Sales Activity Instrumentation</h3>
-        <p class="meta">Salesforce • Telephony • BI</p>
-        <p>End-to-end logging for calls/texts; coaching loop via weekly dashboards.</p>
-        <ul class="bullets">
-          <li>Standardized SLAs & definitions</li>
-          <li>Attribution clarity for outbound</li>
-          <li><strong>Result:</strong> Meetings booked ↑</li>
-        </ul>
-      </article>
+      <ol class="tl-list" id="tl-list">
+        <!-- Items get injected by JS from TIMELINE_DATA -->
+      </ol>
     </div>
   </section>
 
-  <!-- PRINCIPLES -->
-  <section id="principles" class="wrap section">
-    <h2>Principles</h2>
-    <div class="pillars">
-      <div class="pillar">
-        <h3>Discovery to Decision</h3>
-        <p>Start with pain, owners, and success metrics. Make the bet explicit. Ship the smallest proof that moves the decision.</p>
-      </div>
-      <div class="pillar">
-        <h3>Instrumentation = Truth</h3>
-        <p>Define events, cadence, and ownership. If it’s not logged, it didn’t happen. Dashboards for coaching, not theater.</p>
-      </div>
-      <div class="pillar">
-        <h3>Simple > Clever</h3>
-        <p>Prefer explainable scoring and playbooks. Ship fast, learn faster. Optimize what works; kill what doesn’t.</p>
-      </div>
-    </div>
-  </section>
-
-
-
-<!-- TIMELINE -->
-<section id="timeline" class="wrap section">
-  <h2>Experience Timeline</h2>
-  <p class="kicker">A quick scan from latest to earliest</p>
-
-  <div class="tl">
-    <!-- spine & progress -->
-    <div class="tl-spine" aria-hidden="true">
-      <div class="tl-progress"></div>
-    </div>
-
-    <ol class="tl-list">
-      <!-- ITEM -->
-      <li class="tl-item">
-        <div class="tl-dot" aria-hidden="true"></div>
-        <div class="tl-card">
-          <time class="tl-range">2024–2025</time>
-          <h3>Analytics & Revenue Strategy (Consumer Tech)</h3>
-          <p class="tl-meta">Pricing • Lifecycle • Sales Ops</p>
-          <p>Built repeat-revenue playbook (+12% 60-day repeat), dialer/process tune-up (+18% meetings), and pricing guardrails (margin ↑ $MM).</p>
-        </div>
-      </li>
-
-      <li class="tl-item">
-        <div class="tl-dot" aria-hidden="true"></div>
-        <div class="tl-card">
-          <time class="tl-range">2022–2024</time>
-          <h3>Data Engineering & BI</h3>
-          <p class="tl-meta">Snowflake • dbt • Python</p>
-          <p>Stood up 250M+ row pipelines, modeled sources, and shipped exec dashboards to drive weekly decision cycles.</p>
-        </div>
-      </li>
-
-      <li class="tl-item">
-        <div class="tl-dot" aria-hidden="true"></div>
-        <div class="tl-card">
-          <time class="tl-range">2019–2022</time>
-          <h3>Strategy & Operations</h3>
-          <p class="tl-meta">GTM • Process • Finance</p>
-          <p>Owned cross-functional projects from discovery → plan → proof. Bias to measurable bets and clean instrumentation.</p>
-        </div>
-      </li>
-
-      <!-- add more <li class="tl-item"> blocks as needed -->
-    </ol>
-  </div>
-</section>
-
-
-
-  
   <!-- CONTACT -->
   <section id="contact" class="wrap section">
     <h2>Contact</h2>
     <p class="contact-text">Say hi if you’re into revenue strategy, GTM ops, or AI-enabled sales.</p>
     <p class="contact-links">
       <a href="mailto:aneeshkudaravalli@gmail.com" class="btn btn--solid">Email</a>
-      <a href="https://www.linkedin.com/" class="btn btn--line">LinkedIn</a>
+      <a href="https://www.linkedin.com/in/aneesh-k-698605100" class="btn btn--line">LinkedIn</a>
       <a href="https://github.com/aneesh-kuda" class="btn btn--ghost">GitHub</a>
       <a href="resume.pdf" class="btn btn--ghost">Resume (PDF)</a>
     </p>
@@ -199,11 +95,100 @@
   <small>© <span id="y"></span> Aneesh Kuda • Discovery → Decision → Outcomes.</small>
 </footer>
 
-<script>document.getElementById('y').textContent = new Date().getFullYear();</script>
-
-
+<!-- ===== Timeline data + behavior ===== -->
 <script>
-  // Progress fill for the spine
+  // Website-ready summaries based on your LinkedIn (latest first)
+  const TIMELINE_DATA = [
+    {
+      range: "2023 – Present",
+      title: "Sales Analyst",
+      company: "Puffco · Los Angeles",
+      meta: "Revenue • Lifecycle • Pricing",
+      body: "Insights across sales/marketing/ops; pricing guardrails, lifecycle optimization, and process improvements."
+    },
+    {
+      range: "2018 – 2022",
+      title: "Co-founder",
+      company: "Play Together Records · Chicago",
+      meta: "Arts • Nonprofit • Collaboration",
+      body: "Pair musicians & visual artists for limited releases benefitting arts nonprofits; 20+ collaborations."
+    },
+    {
+      range: "2021 – 2023",
+      title: "Data Engineering & Analytics Consultant",
+      company: "West Monroe · Chicago",
+      meta: "Snowflake • dbt • BI",
+      body: "Built large-scale pipelines and exec dashboards; enabled weekly decision cycles on clean data."
+    },
+    {
+      range: "2019 – 2020",
+      title: "Data Science Intern",
+      company: "Northwestern University",
+      meta: "ML • R/Python • Org Behavior",
+      body: "Modeled comms-network data; forecast org behavior; supported funding with clear visualizations."
+    },
+    {
+      range: "2017 – 2019",
+      title: "Analyst & Project Manager",
+      company: "Packback · Chicago",
+      meta: "EdTech • Sales Strategy • Pricing",
+      body: "Co-piloted top-down sales motion; managed $1.25M pipeline; revenue +25% via pricing changes."
+    },
+    {
+      range: "2018",
+      title: "Summer Associate",
+      company: "Listen Ventures · Chicago",
+      meta: "Venture • Consumer • Diligence",
+      body: "Evaluated early-stage brands; analysis contributed to a $1.2M apparel investment."
+    },
+    {
+      range: "2017",
+      title: "Analyst",
+      company: "XcelPros · Chicago",
+      meta: "ERP • Pharma • KPIs",
+      body: "Implemented ERP for pharma; KPI dashboards; coordinated offshore design/dev."
+    },
+    {
+      range: "2015-2016",
+      title: "Business Development",
+      company: "Peanut Butter, Inc. · Chicago",
+      meta: "B2B • SaaS • Sales Ops",
+      body: "Prospecting, demos, and cost-savings analyses for student-loan-benefit software."
+    },
+    {
+      range: "2015 – 2016",
+      title: "Operations Lead",
+      company: "Monkey Bars · Chicago",
+      meta: "Hackathons • Events • Community",
+      body: "Produced internal/public hackathons; managed logistics with corporate partners."
+    },
+    {
+      range: "2015",
+      title: "Co-founder",
+      company: "Tech Tuesday · Chicago",
+      meta: "Networking • Sponsorships",
+      body: "Biweekly tech meet-up; sourced sponsors for food & drinks."
+    }
+  ];
+
+  // Render timeline items
+  (function(){
+    const list = document.getElementById('tl-list');
+    if (!list) return;
+    list.innerHTML = TIMELINE_DATA.map(item => `
+      <li class="tl-item">
+        <div class="tl-dot" aria-hidden="true"></div>
+        <div class="tl-card">
+          <time class="tl-range">${item.range || ""}</time>
+          <h3>${item.title || ""}${item.company ? ` — ${item.company}` : ""}</h3>
+          ${item.meta ? `<p class="tl-meta">${item.meta}</p>` : ""}
+          ${item.body ? `<p>${item.body}</p>` : ""}
+        </div>
+      </li>
+    `).join("");
+  })();
+
+  // Spine progress fill
   (function(){
     const section = document.querySelector('#timeline');
     const progress = section?.querySelector('.tl-progress');
@@ -212,8 +197,10 @@
     const update = () => {
       const r = section.getBoundingClientRect();
       const total = r.height || 1;
-      // how much of the section is within viewport
-      const visible = Math.min(window.innerHeight, Math.max(0, window.innerHeight - Math.max(0, -r.top) - Math.max(0, r.bottom - window.innerHeight)));
+      const visible = Math.min(
+        window.innerHeight,
+        Math.max(0, window.innerHeight - Math.max(0, -r.top) - Math.max(0, r.bottom - window.innerHeight))
+      );
       const ratio = Math.max(0, Math.min(1, visible / total));
       progress.style.transform = `scaleY(${ratio})`;
     };
@@ -231,8 +218,9 @@
     }, {threshold: 0.2});
     items.forEach(el=>io.observe(el));
   })();
+
+  // Footer year
+  document.getElementById('y').textContent = new Date().getFullYear();
 </script>
-
-
 </body>
 </html>
