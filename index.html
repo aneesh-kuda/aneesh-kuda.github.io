@@ -236,5 +236,39 @@
 </footer>
 
 <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+
+
+<script>
+  // Progress fill for the spine
+  (function(){
+    const section = document.querySelector('#timeline');
+    const progress = section?.querySelector('.tl-progress');
+    if (!section || !progress) return;
+
+    const update = () => {
+      const r = section.getBoundingClientRect();
+      const total = r.height || 1;
+      // how much of the section is within viewport
+      const visible = Math.min(window.innerHeight, Math.max(0, window.innerHeight - Math.max(0, -r.top) - Math.max(0, r.bottom - window.innerHeight)));
+      const ratio = Math.max(0, Math.min(1, visible / total));
+      progress.style.transform = `scaleY(${ratio})`;
+    };
+    update();
+    window.addEventListener('scroll', update, {passive:true});
+    window.addEventListener('resize', update);
+  })();
+
+  // Reveal items on scroll
+  (function(){
+    const items = document.querySelectorAll('.tl-item');
+    if (!('IntersectionObserver' in window)){ items.forEach(el=>el.classList.add('in')); return; }
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+    }, {threshold: 0.2});
+    items.forEach(el=>io.observe(el));
+  })();
+</script>
+
+
 </body>
 </html>
