@@ -126,3 +126,44 @@ a:hover{text-decoration:underline}
 .btn--ghost:hover{border-color:var(--orange); background:rgba(255,122,26,.15)}
 
 /* ===== Contact & Foote*
+
+/* ===== Timeline ===== */
+.tl{position:relative; display:grid; grid-template-columns: 28px 1fr; gap:1rem; margin-top:1rem}
+.tl-spine{
+  position:relative; grid-column:1; width:4px; margin:0 auto; background: #f1e4d8; border-radius:999px;
+}
+.tl-progress{
+  position:absolute; left:0; top:0; width:100%; height:100%;
+  transform-origin: top; transform: scaleY(0);
+  background: linear-gradient(180deg, var(--orange), var(--orange2));
+  border-radius:999px;
+}
+.tl-list{grid-column:2; list-style:none; margin:0; padding:0}
+.tl-item{position:relative; display:grid; grid-template-columns: 1fr; gap:.5rem; margin:0 0 1.25rem 0}
+.tl-dot{
+  position:absolute; left:-38px; top:.75rem; width:14px; height:14px; border-radius:50%;
+  background:#fff; border:3px solid var(--orange); box-shadow: 0 0 0 4px rgba(255,122,26,.12);
+}
+.tl-card{
+  background: var(--card); border-radius: var(--radius); padding:1rem; 
+  box-shadow: var(--ring); border:1px dashed #ffd7b5;
+  opacity:0; transform: translateY(10px);
+  transition: opacity .45s ease, transform .45s ease;
+}
+.tl-item.in .tl-card{opacity:1; transform: translateY(0)}
+.tl-range{display:inline-block; font-weight:700; color: var(--orange); margin-bottom:.25rem}
+.tl-meta{color:var(--muted); margin:.15rem 0 .6rem}
+
+/* wider screens: breathe a bit more */
+@media (min-width: 900px){
+  .tl{grid-template-columns: 36px 1fr}
+  .tl-dot{left:-46px}
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .tl-progress{transition:none}
+  .tl-card{transition:none; opacity:1; transform:none}
+}
+
+
