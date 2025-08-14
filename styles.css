@@ -79,39 +79,6 @@ a:hover{text-decoration:underline}
 .kicker{color:var(--muted); margin:-.25rem 0 1rem}
 .about{max-width:70ch}
 
-/* ===== Tiles (Wins) ===== */
-.grid{display:grid; grid-template-columns:repeat(12,1fr); gap:1rem}
-.tile{
-  grid-column:span 4; background:var(--card); border-radius:var(--radius); padding:1rem; box-shadow:var(--ring);
-}
-.tile .meta{color:var(--muted); font-size:.95rem}
-.bullets{margin:.25rem 0 0 1.1rem}
-@media (max-width:980px){ .tile{grid-column:span 6} }
-@media (max-width:680px){ .tile{grid-column:span 12} }
-
-/* ===== Cards (Projects) ===== */
-.section-head{display:flex; align-items:end; justify-content:space-between; gap:1rem}
-.cards{display:grid; grid-template-columns:repeat(12,1fr); gap:1rem; margin-top:1rem}
-.card{
-  grid-column:span 4; background:var(--card); border-radius:var(--radius); padding:1rem; box-shadow:var(--ring);
-  border:1px dashed #ffd7b5; background-image: linear-gradient(transparent, transparent), radial-gradient(#ffe9d6 1px, transparent 1px);
-  background-size:auto, 12px 12px; background-position:0 0, 0 0;
-}
-.badge{
-  display:inline-block; font-size:.75rem; font-weight:700; letter-spacing:.02em;
-  padding:.25rem .55rem; border-radius:999px; background:#fff3e8; color:var(--orange); border:1px solid #ffd8b0;
-  margin-bottom:.5rem;
-}
-.card .meta{color:var(--muted); font-size:.95rem}
-@media (max-width:980px){ .card{grid-column:span 6} }
-@media (max-width:680px){ .card{grid-column:span 12} }
-
-/* ===== Pillars (Principles) ===== */
-.pillars{display:grid; grid-template-columns:repeat(12,1fr); gap:1rem; margin-top:1rem}
-.pillar{grid-column:span 4; background:var(--card); border-radius:var(--radius); padding:1rem; box-shadow:var(--ring)}
-@media (max-width:980px){ .pillar{grid-column:span 6} }
-@media (max-width:680px){ .pillar{grid-column:span 12} }
-
 /* ===== Buttons ===== */
 .btn{
   display:inline-block; padding:.6rem .9rem; border-radius:10px; border:2px solid transparent;
@@ -120,17 +87,15 @@ a:hover{text-decoration:underline}
 .btn:active{transform:translateY(1px)}
 .btn--solid{background:var(--orange); color:#fff}
 .btn--solid:hover{background:var(--orange2); color:#fff}
-.btn--line{border-color:rgba(255,122,26,.4); color:#fff; background:transparent}
+.btn--line{border-color:#fff; color:#fff; background:transparent}
 .btn--line:hover{border-color:#fff; background:rgba(255,255,255,.15)}
 .btn--ghost{border-color:rgba(255,122,26,.4); color:var(--ink); background:rgba(255,122,26,.08)}
 .btn--ghost:hover{border-color:var(--orange); background:rgba(255,122,26,.15)}
 
-/* ===== Contact & Foote*
-
 /* ===== Timeline ===== */
 .tl{position:relative; display:grid; grid-template-columns: 28px 1fr; gap:1rem; margin-top:1rem}
 .tl-spine{
-  position:relative; grid-column:1; width:4px; margin:0 auto; background: #f1e4d8; border-radius:999px;
+  position:relative; grid-column:1; width:4px; margin:0 auto; background:#f1e4d8; border-radius:999px;
 }
 .tl-progress{
   position:absolute; left:0; top:0; width:100%; height:100%;
@@ -142,28 +107,31 @@ a:hover{text-decoration:underline}
 .tl-item{position:relative; display:grid; grid-template-columns: 1fr; gap:.5rem; margin:0 0 1.25rem 0}
 .tl-dot{
   position:absolute; left:-38px; top:.75rem; width:14px; height:14px; border-radius:50%;
-  background:#fff; border:3px solid var(--orange); box-shadow: 0 0 0 4px rgba(255,122,26,.12);
+  background:#fff; border:3px solid var(--orange); box-shadow:0 0 0 4px rgba(255,122,26,.12);
 }
 .tl-card{
-  background: var(--card); border-radius: var(--radius); padding:1rem; 
-  box-shadow: var(--ring); border:1px dashed #ffd7b5;
-  opacity:0; transform: translateY(10px);
-  transition: opacity .45s ease, transform .45s ease;
+  background:var(--card); border-radius:var(--radius); padding:1rem; box-shadow:var(--ring);
+  border:1px dashed #ffd7b5;
+  opacity:0; transform:translateY(10px);
+  transition:opacity .45s ease, transform .45s ease;
 }
-.tl-item.in .tl-card{opacity:1; transform: translateY(0)}
-.tl-range{display:inline-block; font-weight:700; color: var(--orange); margin-bottom:.25rem}
+.tl-item.in .tl-card{opacity:1; transform:translateY(0)}
+.tl-range{display:inline-block; font-weight:700; color:var(--orange); margin-bottom:.25rem}
 .tl-meta{color:var(--muted); margin:.15rem 0 .6rem}
 
-/* wider screens: breathe a bit more */
+/* wider screens */
 @media (min-width: 900px){
   .tl{grid-template-columns: 36px 1fr}
   .tl-dot{left:-46px}
 }
 
-/* Respect reduced motion */
+/* reduced motion */
 @media (prefers-reduced-motion: reduce){
   .tl-progress{transition:none}
   .tl-card{transition:none; opacity:1; transform:none}
 }
 
-
+/* ===== Contact & Footer ===== */
+.contact-text{max-width:60ch}
+.contact-links .btn{margin-right:.5rem; margin-bottom:.5rem}
+.footer{padding:2rem 1.25rem 3rem; color:#6a6a6a}
