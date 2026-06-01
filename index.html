@@ -65,9 +65,9 @@
     .case-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 34px 40px; cursor: pointer; gap: 24px; }
     .case-header-left { flex: 1; }
     .case-num { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 500; margin-bottom: 10px; }
-    .case-title { font-family: var(--ff-d); font-size: clamp(1.15rem, 2.2vw, 1.65rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 12px; }
-    .case-impact { font-size: 0.92rem; font-weight: 500; color: var(--text); line-height: 1.55; margin-bottom: 10px; padding-left: 12px; border-left: 2px solid var(--accent); }
-    .case-summary { font-size: 0.89rem; color: var(--text-2); line-height: 1.65; max-width: 500px; }
+    .case-title { font-family: var(--ff-d); font-size: clamp(1.35rem, 2.4vw, 1.85rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 12px; }
+    .case-impact { font-size: 1rem; font-weight: 500; color: var(--text); line-height: 1.6; margin-bottom: 12px; padding-left: 12px; border-left: 2px solid var(--accent); }
+    .case-summary { font-size: 1rem; color: var(--text-2); line-height: 1.7; max-width: 560px; }
     .case-toggle { flex-shrink: 0; margin-top: 4px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-2); background: none; border: 1px solid var(--border); border-radius: 4px; padding: 8px 14px; cursor: pointer; font-family: var(--ff-b); transition: border-color 0.2s, color 0.2s; white-space: nowrap; }
     .case-toggle:hover { border-color: var(--accent); color: var(--accent); }
     .case-tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 40px 28px; }
@@ -76,7 +76,7 @@
     .case-body.open { display: block; }
     .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; padding-top: 34px; }
     .cs h4 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-2); font-weight: 500; margin-bottom: 12px; }
-    .cs p, .cs li { font-size: 0.91rem; line-height: 1.72; color: var(--text); font-weight: 300; }
+    .cs p, .cs li { font-size: 1rem; line-height: 1.78; color: var(--text); font-weight: 300; }
     .cs ul { list-style: none; padding: 0; }
     .cs ul li { padding: 4px 0 4px 16px; position: relative; }
     .cs ul li::before { content: "\2014"; position: absolute; left: 0; color: var(--accent); font-size: 0.82rem; }
@@ -130,7 +130,7 @@
     /* NL QUERY FLOW */
     .nl-flow { display: flex; flex-direction: column; align-items: center; gap: 10px; }
     .nl-qs { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 520px; }
-    .nl-q { font-size: 0.8rem; color: var(--text-2); background: var(--bg-alt); border: 1px solid var(--border); border-radius: 5px; padding: 9px 14px; font-style: italic; line-height: 1.45; }
+    .nl-q { font-size: 0.95rem; color: var(--text); background: var(--bg-alt); border: 1px solid var(--border); border-radius: 5px; padding: 12px 16px; font-style: italic; line-height: 1.55; }
     .nl-engine { background: var(--accent); border-radius: 6px; padding: 9px 28px; color: #fff; font-size: 0.83rem; font-weight: 500; }
     .nl-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 420px; }
     .nl-box { background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 10px 12px; font-size: 0.77rem; color: var(--text); text-align: center; }
@@ -299,7 +299,7 @@
             <div class="stats-row">
               <div class="stat"><span class="stat-num">~50%</span><span class="stat-label">faster first response time</span></div>
               <div class="stat"><span class="stat-num">~50%</span><span class="stat-label">reduction in time-to-solve</span></div>
-              <div class="stat"><span class="stat-num">1,000+</span><span class="stat-label">ticket backlog cleared in w weeks</span></div>
+              <div class="stat"><span class="stat-num">1,000+</span><span class="stat-label">ticket backlog cleared in two weeks</span></div>
             </div>
           </div>
           <div class="cs">
@@ -459,6 +459,10 @@
   </div>
 
 </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- CASE 3: BULK ORDERS -->
     <div class="case-card">
