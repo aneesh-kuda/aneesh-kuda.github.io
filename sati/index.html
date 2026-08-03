@@ -292,6 +292,7 @@ section.view.active{display:block}
 const SUPABASE_URL = 'https://oosykwbilwyzdsrsmfeb.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vc3lrd2JpbHd5emRzcnNtZmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0OTcyMzYsImV4cCI6MjEwMTA3MzIzNn0.rs3ohi8Dko7dtv1YhOAmiRnYa9-Gvh9X-WJaKVe6Loo';
 /* =============================================================================== */
+/* =============================================================================== */
 
 const KEY='sati.v3';
 const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -316,6 +317,12 @@ function loadStore(){
         s.categories ||= structuredClone(DEFAULT_CATS);
         s.reflections ||= {}; s.documents ||= []; s.comments ||= [];
         s.streakPicks ||= ['journal'];
+        /* migration: Physical Health/Fitness → Fitness */
+        let migrated=false;
+        s.categories.forEach(c=>{if(c.id==='fitness'&&c.label!=='Fitness'){c.label='Fitness';migrated=true;}});
+        s.entries.forEach(e=>e.activities.forEach(a=>{
+          if(a.category==='fitness'&&a.categoryLabel!=='Fitness'){a.categoryLabel='Fitness';migrated=true;}}));
+        if(migrated){s.settingsUpdatedAt=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(s));}
         return s;}}
   }catch(e){}
   return {schema:3,profile:{id:'local-user'},categories:structuredClone(DEFAULT_CATS),
@@ -361,11 +368,22 @@ async function initCloud(){
   if(session)afterLogin();
 }
 async function afterLogin(){await syncAll();await loadGrantsAsCoach();renderAcct();rerenderAll();}
+function errMsg(error){
+  if(!error)return 'Unknown error';
+  const m=error.message||((typeof error==='string')?error:JSON.stringify(error));
+  if(/error sending|smtp|email.*fail/i.test(m))return 'Email failed to send — check Supabase Auth logs & Brevo SMTP settings';
+  if(/rate limit|security purposes/i.test(m))return m+' (rate limited — wait a minute)';
+  if(/failed to fetch|networkerror/i.test(m))return 'Couldn\'t reach Supabase — check the URL pasted in index.html';
+  return m;
+}
 async function sendCode(){
+  if(!window.supabase||!sb){toast('Supabase library didn\'t load — check connection and refresh');return;}
   const email=document.getElementById('loginEmail').value.trim();
   if(!email){toast('Enter your email');return;}
+  const btn=document.getElementById('sendBtn');
+  if(btn){btn.disabled=true;btn.textContent='Sending…';}
   const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:true}});
-  if(error){toast(error.message);return;}
+  if(error){toast(errMsg(error));if(btn){btn.disabled=false;btn.textContent='Email me a login code';}return;}
   window._pendingEmail=email;
   document.getElementById('acctBody').innerHTML=`
     <p>We emailed a 6-digit code to <b>${esc(email)}</b>.</p>
@@ -375,7 +393,7 @@ async function sendCode(){
 async function verifyCode(){
   const token=document.getElementById('otpCode').value.trim();
   const {error}=await sb.auth.verifyOtp({email:window._pendingEmail,token,type:'email'});
-  if(error){toast(error.message);return;}
+  if(error){toast(errMsg(error));return;}
   toast('Logged in ✓');
 }
 async function logout(){if(sb)await sb.auth.signOut();viewing=null;viewerData=null;updateViewerBar();renderAcct();rerenderAll();}
@@ -385,7 +403,7 @@ function renderAcct(){
   if(!session){
     el.innerHTML=`<p>Log in to sync across devices and enable coach access.</p>
       <div class="field"><input type="email" id="loginEmail" placeholder="you@example.com"></div>
-      <button class="setbtn primary" onclick="sendCode()">Email me a login code</button>`;
+      <button class="setbtn primary" id="sendBtn" onclick="sendCode()">Email me a login code</button>`;
     document.getElementById('coachCard').style.display='none';return;
   }
   el.innerHTML=`<p>Logged in as <b>${esc(session.user.email)}</b></p>
