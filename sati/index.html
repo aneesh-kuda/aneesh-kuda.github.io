@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title>Sati — time & energy journal</title>
-<meta name="theme-color" content="#F4F6F3">
+<meta name="theme-color" content="#F7F3EC">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,8 +16,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --paper:#F4F6F3; --card:#FFFFFF; --ink:#17242D; --graphite:#75838D; --line:#DDE3E0;
-  --cobalt:#2B50E0; --cobalt-soft:#E7EBFC;
+  --paper:#F7F3EC; --card:#FFFEFA; --ink:#2A2521; --graphite:#8A7F72; --line:#E6DED1;
+  /* accent = burnt terracotta, matching aneeshkuda.com */
+  --cobalt:#C4572E; --cobalt-soft:#F6E4DA;
   --ana:#1F9D62; --ana-soft:#E3F4EC; --cata:#D6493E; --cata-soft:#FBE9E7;
   --gold:#E8A13B; --gold-soft:#FCF3E3;
   --r:14px; --mono:'IBM Plex Mono',ui-monospace,monospace; --sans:'Archivo',system-ui,sans-serif;
@@ -182,6 +183,7 @@ section.view.active{display:block}
 .subtag{font-size:.72rem;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
 .inlineadd{display:flex;gap:8px;margin-top:8px}
 .inlineadd input{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--paper);font-size:.88rem}
+.viewmore{width:100%;text-align:center;color:var(--cobalt);font-weight:700;font-size:.85rem;padding:12px}
 .empty{text-align:center;color:var(--graphite);padding:60px 20px;font-size:.95rem;line-height:1.6}
 .empty strong{display:block;font-weight:900;font-size:1.2rem;color:var(--ink);margin-bottom:6px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
@@ -231,6 +233,9 @@ section.view.active{display:block}
     <div id="todayReflect"></div>
     <div class="jsec">Notes & documents <button class="rhead-btn" style="color:var(--cobalt);font-weight:700;font-size:.85rem;margin-left:8px" onclick="newDoc()">+ New</button></div>
     <div id="docs"></div>
+    <div class="jsec">Comments</div>
+    <div class="chips" id="comFilters" style="margin:0 2px 10px"></div>
+    <div id="comList"></div>
     <div class="jsec">Past reflections</div>
     <div id="pastReflects"></div>
   </section>
@@ -291,7 +296,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const KEY='sati.v3';
 const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const DEFAULT_CATS=[
- {id:'fitness',label:'Physical Health/Fitness',color:'#1F9D62',subs:['Strength Workout','Stretch','Cardio Workout','Walk']},
+ {id:'fitness',label:'Fitness',color:'#1F9D62',subs:['Strength Workout','Stretch','Cardio Workout','Walk']},
  {id:'work',label:'Work',color:'#2B50E0',subs:['Meeting','Creative','Personal','Job']},
  {id:'spiritual',label:'Spiritual',color:'#9C5FE0',subs:['Journal','Meditate']},
  {id:'sleep',label:'Sleep',color:'#5C6BC0',subs:[]},
@@ -607,7 +612,7 @@ function setMode(m){
   document.getElementById('modePct').classList.toggle('sel',m==='pct');
   renderActivities();
 }
-function blankActivity(){return {id:uid(),category:null,sub:null,energy:null,description:'',state:'',alloc:'',det:false};}
+function blankActivity(){return {id:uid(),category:null,sub:null,energy:null,description:'',state:'',alloc:''};}
 function autoSplit(){
   if(allocTouched)return;
   const n=draft.length;
@@ -640,7 +645,7 @@ function renderActivities(){
   wrap.innerHTML='';
   draft.forEach(a=>{
     const cat=a.category?catById(a.category):null;
-    const card=document.createElement('div');card.className='acard'+(a.det?' det':'');
+    const card=document.createElement('div');card.className='acard';
     card.innerHTML=`
       ${draft.length>1?`<button class="remove" aria-label="Remove" onclick="removeActivity('${a.id}')">✕</button>`:''}
       <div class="chips">${store.categories.map(c=>`<button class="${a.category===c.id?'sel':''}" onclick="setCat('${a.id}','${c.id}')">${esc(c.label)}</button>`).join('')}</div>
@@ -653,15 +658,12 @@ function renderActivities(){
         <input type="number" inputmode="decimal" min="0" value="${a.alloc}" oninput="allocEdit('${a.id}',this.value)">
         <span class="unit">${mode==='pct'?'%':'min'}</span>
         <span class="alloc-equiv" id="eq-${a.id}"></span>
-        <button class="detbtn" onclick="toggleDet('${a.id}')">${a.det?'– details':'+ details'}</button>
       </div>
-      <div class="details">
-        <div class="field"><label>What were you doing?</label>
-          <input type="text" value="${escAttr(a.description)}" oninput="draftSet('${a.id}','description',this.value)" placeholder="free text">
-        </div>
-        <div class="field" style="margin-bottom:2px"><label>Energetic self-perception / emotion</label>
-          <textarea oninput="draftSet('${a.id}','state',this.value)" placeholder="what was the energy underneath?">${esc(a.state)}</textarea>
-        </div>
+      <div class="field" style="margin-top:12px"><label>What were you doing?</label>
+        <input type="text" value="${escAttr(a.description)}" oninput="draftSet('${a.id}','description',this.value)">
+      </div>
+      <div class="field" style="margin-bottom:2px"><label>Energetic self perception</label>
+        <textarea oninput="draftSet('${a.id}','state',this.value)" placeholder="what was the energy underneath?">${esc(a.state)}</textarea>
       </div>`;
     wrap.appendChild(card);
   });
@@ -672,7 +674,6 @@ function allocEdit(id,v){allocTouched=true;draftSet(id,'alloc',v);refreshRemaind
 function setCat(id,cat){const a=draft.find(x=>x.id===id);if(a){a.category=a.category===cat?null:cat;a.sub=null;}renderActivities();}
 function setSub(id,sub){const a=draft.find(x=>x.id===id);if(a)a.sub=a.sub===sub?null:sub;renderActivities();}
 function setEnergy(id,e){const a=draft.find(x=>x.id===id);if(a)a.energy=a.energy===e?null:e;renderActivities();}
-function toggleDet(id){const a=draft.find(x=>x.id===id);if(a)a.det=!a.det;renderActivities();}
 
 /* percent → minutes without rounding overflow (largest remainder) */
 function resolveMinutes(list,W){
@@ -725,7 +726,7 @@ function editEntry(id){
   document.getElementById('modePct').classList.remove('sel');
   document.getElementById('winStart').value=toLocalInput(new Date(e.start));
   document.getElementById('winEnd').value=toLocalInput(new Date(e.end));
-  draft=e.activities.map(a=>({id:a.id,category:a.category,sub:a.sub,energy:a.energy,description:a.description,state:a.state,alloc:a.minutes,det:!!(a.description||a.state)}));
+  draft=e.activities.map(a=>({id:a.id,category:a.category,sub:a.sub,energy:a.energy,description:a.description,state:a.state,alloc:a.minutes}));
   document.getElementById('saveBtn').textContent='Update entry';
   refreshPrompt();renderActivities();showView('log');
 }
@@ -762,7 +763,7 @@ async function toggleStar(cid){
   c.starred=!c.starred;
   if(viewing){if(sb&&session)await sb.from('comments').update({starred:c.starred}).eq('id',cid);}
   else{saveStore();if(sb&&session)sb.from('comments').update({starred:c.starred}).eq('id',cid).then(()=>{});}
-  renderTimeline(c.activityId);
+  renderTimeline(c.activityId);if(document.getElementById('view-journal').classList.contains('active'))renderJournal();
 }
 async function deleteComment(cid){
   const list=ds().comments;
@@ -770,7 +771,7 @@ async function deleteComment(cid){
   if(viewing){if(sb&&session)await sb.from('comments').delete().eq('id',cid);viewerData.comments=list.filter(x=>x.id!==cid);}
   else{store.comments=list.filter(x=>x.id!==cid);saveStore();
     if(sb&&session)sb.from('comments').delete().eq('id',cid).then(()=>{});}
-  renderTimeline(c.activityId);
+  renderTimeline(c.activityId);if(document.getElementById('view-journal').classList.contains('active'))renderJournal();
 }
 
 /* =============== timeline =============== */
@@ -828,14 +829,14 @@ function renderTimeline(keepOpen){
               ${a.energy==='cata'?'<span class="epill cata">catabolic</span>':''}
             </div>
             ${a.description?`<div class="desc">${esc(a.description)}</div>`:''}
-            ${a.state?`<div class="state">“${esc(a.state)}”</div>`:''}
           </div>
           <div class="rowbtns">
-            <button onclick="toggleThread('${a.id}')">💬${coms.length?' '+coms.length:''}${starred?' ★'+starred:''}</button>
+            <button onclick="toggleThread('${a.id}')">${open?'▴':'▾'}${(a.state||coms.length)?'':''} ${coms.length?'💬'+coms.length:''}${starred?' ★'+starred:''}</button>
             ${!viewing?`<button onclick="editEntry('${entryId}')">edit</button>`:''}
           </div>
         </div>
         <div class="cthread">
+          ${a.state?`<div class="state" style="margin-bottom:8px">“${esc(a.state)}”</div>`:''}
           ${comHtml||'<div style="font-size:.8rem;color:var(--graphite)">No comments yet.</div>'}
           <div class="caddrow">
             <input type="text" id="cin-${a.id}" placeholder="Add a comment…" onkeydown="if(event.key==='Enter')addComment('${a.id}','${entryId}')">
@@ -866,15 +867,44 @@ function deleteDayEntries(dk){
 }
 
 /* =============== journal (reflections + documents) =============== */
-let editingReflection=null,editingDoc=null;
+let editingReflection=null,editingDoc=null,showAllReflects=false,showAllComments=false,comFilter='all';
 function renderJournal(){
   const D=ds();
   const tk=todayKey();
-  const tEl=document.getElementById('todayReflect');
-  tEl.innerHTML=reflectCard(tk,D.reflections[tk],true);
-  const past=Object.keys(D.reflections).filter(k=>k!==tk).sort().reverse().slice(0,30);
-  document.getElementById('pastReflects').innerHTML=past.length?past.map(k=>reflectCard(k,D.reflections[k],false)).join(''):'<p style="color:var(--graphite);font-size:.88rem">No past reflections yet.</p>';
+  document.getElementById('todayReflect').innerHTML=reflectCard(tk,D.reflections[tk],true);
+  const pastKeys=Object.keys(D.reflections).filter(k=>k!==tk).sort().reverse();
+  const shownKeys=showAllReflects?pastKeys:pastKeys.slice(0,5);
+  document.getElementById('pastReflects').innerHTML=(pastKeys.length?shownKeys.map(k=>reflectCard(k,D.reflections[k],false)).join(''):'<p style="color:var(--graphite);font-size:.88rem">No past reflections yet.</p>')
+    +(pastKeys.length>5&&!showAllReflects?`<button class="viewmore" onclick="showAllReflects=true;renderJournal()">View ${pastKeys.length-5} more</button>`:'');
+  renderComments();
   renderDocs();
+}
+function setComFilter(f){comFilter=f;showAllComments=false;renderJournal();}
+function renderComments(){
+  const D=ds();
+  const ownerEmail=viewing?viewing.label:((session&&session.user.email)||'me');
+  const filters=[['all','All'],['star','★ Starred'],['coach','Coach']];
+  document.getElementById('comFilters').innerHTML=filters.map(([v,l])=>
+    `<button class="${comFilter===v?'sel':''}" onclick="setComFilter('${v}')">${l}</button>`).join('');
+  // context index: activityId → what/where
+  const ctx={};
+  D.entries.forEach(e=>e.activities.forEach(a=>{
+    ctx[a.id]={label:a.description||(a.categoryLabel||D.cat(a.category).label),day:dayKey(e.start)};}));
+  let list=[...D.comments].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+  if(comFilter==='star')list=list.filter(c=>c.starred);
+  if(comFilter==='coach')list=list.filter(c=>(c.author||'')&&(c.author||'').toLowerCase()!==ownerEmail.toLowerCase());
+  const el=document.getElementById('comList');
+  if(!list.length){el.innerHTML='<p style="color:var(--graphite);font-size:.88rem">'+(comFilter==='all'?'No comments yet — open a timeline row to leave one.':comFilter==='star'?'No gold-starred comments yet.':'No coach comments yet.')+'</p>';return;}
+  const shown=showAllComments?list:list.slice(0,5);
+  el.innerHTML='<div class="reflect">'+shown.map(c=>{
+    const cx=ctx[c.activityId];
+    return `<div class="comment ${c.starred?'starred':''}">
+      <button class="star" onclick="toggleStar('${c.id}')" aria-label="Star">★</button>
+      <div class="cbody">${esc(c.text)}
+        <div class="cmeta">${esc(c.author||'')} · ${fmtDate(c.createdAt)}${cx?' · on “'+esc(cx.label)+'” ('+dayLabel(cx.day).split(' · ')[0]+')':''}</div></div>
+      <button class="cdel" onclick="deleteComment('${c.id}')">✕</button>
+    </div>`;}).join('')+'</div>'
+    +(list.length>5&&!showAllComments?`<button class="viewmore" onclick="showAllComments=true;renderJournal()">View ${list.length-5} more</button>`:'');
 }
 function reflectCard(dk,r,isToday){
   if(editingReflection===dk&&!viewing){
