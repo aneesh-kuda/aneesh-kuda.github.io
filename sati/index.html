@@ -292,9 +292,9 @@ section.view.active{display:block}
 const SUPABASE_URL = 'https://oosykwbilwyzdsrsmfeb.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vc3lrd2JpbHd5emRzcnNtZmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0OTcyMzYsImV4cCI6MjEwMTA3MzIzNn0.rs3ohi8Dko7dtv1YhOAmiRnYa9-Gvh9X-WJaKVe6Loo';
 /* =============================================================================== */
-/* =============================================================================== */
 
-const KEY='sati.v3';
+const BASE='sati.v3';
+function activeKey(){return BASE+'.'+(localStorage.getItem('sati.active')||'anon');}
 const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const DEFAULT_CATS=[
  {id:'fitness',label:'Fitness',color:'#1F9D62',subs:['Strength Workout','Stretch','Cardio Workout','Walk']},
@@ -311,7 +311,7 @@ const PALETTE=['#2B50E0','#1F9D62','#E8A13B','#E5679B','#9C5FE0','#3FB8AF','#8D6
 
 function loadStore(){
   try{
-    const raw=localStorage.getItem(KEY);
+    const raw=localStorage.getItem(activeKey())||localStorage.getItem(BASE);
     if(raw){const s=JSON.parse(raw);
       if(s&&Array.isArray(s.entries)){
         s.categories ||= structuredClone(DEFAULT_CATS);
@@ -322,13 +322,14 @@ function loadStore(){
         s.categories.forEach(c=>{if(c.id==='fitness'&&c.label!=='Fitness'){c.label='Fitness';migrated=true;}});
         s.entries.forEach(e=>e.activities.forEach(a=>{
           if(a.category==='fitness'&&a.categoryLabel!=='Fitness'){a.categoryLabel='Fitness';migrated=true;}}));
-        if(migrated){s.settingsUpdatedAt=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(s));}
+        if(migrated){s.settingsUpdatedAt=new Date().toISOString();}
+        localStorage.setItem(activeKey(),JSON.stringify(s));localStorage.removeItem(BASE);
         return s;}}
   }catch(e){}
   return {schema:3,profile:{id:'local-user'},categories:structuredClone(DEFAULT_CATS),
           entries:[],reflections:{},documents:[],comments:[],streakPicks:['journal'],settingsUpdatedAt:new Date().toISOString()};
 }
-function saveStore(){localStorage.setItem(KEY,JSON.stringify(store));}
+function saveStore(){localStorage.setItem(activeKey(),JSON.stringify(store));}
 let store=loadStore();
 
 /* =============== helpers =============== */
@@ -357,13 +358,26 @@ function lastEntryEnd(){
 
 /* =============== supabase (same pattern as before) =============== */
 let sb=null,session=null,viewing=null,viewerData=null;
+function switchUser(uid){
+  const cur=localStorage.getItem('sati.active')||'anon';
+  if(cur===uid)return;
+  if(uid!=='anon'&&!localStorage.getItem(BASE+'.'+uid)){
+    const anon=localStorage.getItem(BASE+'.anon');
+    if(anon){localStorage.setItem(BASE+'.'+uid,anon);localStorage.removeItem(BASE+'.anon');}
+  }
+  localStorage.setItem('sati.active',uid);
+  store=loadStore();
+  draft=[blankActivity()];allocTouched=false;editingId=null;
+  initWindow();autoSplit();renderActivities();rerenderAll();
+}
 const cloudOn=()=>SUPABASE_URL.startsWith('https://')&&!SUPABASE_ANON_KEY.includes('YOUR-');
 async function initCloud(){
   if(!cloudOn()){renderAcct();return;}
   sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
   const {data}=await sb.auth.getSession();
   session=data.session||null;
-  sb.auth.onAuthStateChange((_e,s)=>{session=s;renderAcct();if(s)afterLogin();});
+  if(session)switchUser(session.user.id);
+  sb.auth.onAuthStateChange((_e,s)=>{session=s;if(s)switchUser(s.user.id);else switchUser('anon');renderAcct();if(s)afterLogin();});
   renderAcct();
   if(session)afterLogin();
 }
@@ -425,7 +439,7 @@ async function syncAll(manual){
     const refRows=Object.entries(store.reflections).map(([day,r])=>({user_id:uidS,day,text:r.text,shared:!!r.shared,updated_at:r.updatedAt}));
     if(refRows.length){const {error}=await sb.from('reflections').upsert(refRows);if(error)throw error;}
     if(store.documents.length){const {error}=await sb.from('documents').upsert(store.documents.map(d=>({id:d.id,user_id:uidS,title:d.title,body:d.body,shared:!!d.shared,created_at:d.createdAt,updated_at:d.updatedAt})));if(error)throw error;}
-    if(store.comments.length){const {error}=await sb.from('comments').upsert(store.comments.map(c=>({id:c.id,owner_id:uidS,activity_id:c.activityId,entry_id:c.entryId,author_email:c.author||session.user.email,text:c.text,starred:!!c.starred,created_at:c.createdAt})));if(error)throw error;}
+    if(store.comments.length){const {error}=await sb.from('comments').upsert(store.comments.map(c=>({id:c.id,owner_id:uidS,activity_id:c.activityId,target_type:c.targetType||'activity',entry_id:c.entryId,author_email:c.author||session.user.email,text:c.text,starred:!!c.starred,created_at:c.createdAt})));if(error)throw error;}
     await sb.from('user_settings').upsert({user_id:uidS,categories:store.categories,streak_picks:store.streakPicks,updated_at:store.settingsUpdatedAt||new Date().toISOString()});
     const pull=async(t,q)=>{const {data,error}=await q;if(error)throw error;return data||[];};
     const remoteE=await pull('entries',sb.from('entries').select('*').eq('user_id',uidS));
@@ -442,7 +456,7 @@ async function syncAll(manual){
     store.documents=Object.values(docsById).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
     const comById=Object.fromEntries(store.comments.map(c=>[c.id,c]));
     (await pull('comments',sb.from('comments').select('*').eq('owner_id',uidS))).forEach(r=>{
-      comById[r.id]={id:r.id,activityId:r.activity_id,entryId:r.entry_id,author:r.author_email,text:r.text,starred:r.starred,createdAt:r.created_at};});
+      comById[r.id]={id:r.id,activityId:r.activity_id,targetType:r.target_type||'activity',entryId:r.entry_id,author:r.author_email,text:r.text,starred:r.starred,createdAt:r.created_at};});
     store.comments=Object.values(comById);
     const {data:st}=await sb.from('user_settings').select('*').eq('user_id',uidS).maybeSingle();
     if(st&&new Date(st.updated_at)>new Date(store.settingsUpdatedAt||0)){
@@ -504,7 +518,7 @@ async function viewJournal(ownerId,label){
     entries:ents.map(rowEntry).sort((a,b)=>new Date(a.start)-new Date(b.start)),
     reflections:Object.fromEntries((refs||[]).map(r=>[r.day,{text:r.text,shared:true,updatedAt:r.updated_at}])),
     documents:(docs||[]).map(d=>({id:d.id,title:d.title,body:d.body,shared:true,createdAt:d.created_at,updatedAt:d.updated_at})),
-    comments:(coms||[]).map(r=>({id:r.id,activityId:r.activity_id,entryId:r.entry_id,author:r.author_email,text:r.text,starred:r.starred,createdAt:r.created_at})),
+    comments:(coms||[]).map(r=>({id:r.id,activityId:r.activity_id,targetType:r.target_type||'activity',entryId:r.entry_id,author:r.author_email,text:r.text,starred:r.starred,createdAt:r.created_at})),
     categories:(st&&st.categories)||structuredClone(DEFAULT_CATS),
     ownerId
   };
@@ -759,21 +773,44 @@ function deleteEntry(id){
 
 /* =============== comments =============== */
 function commentsFor(actId){return ds().comments.filter(c=>c.activityId===actId).sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));}
-async function addComment(actId,entryId){
-  const inp=document.getElementById('cin-'+actId);
+function refreshAfterComment(targetType,targetId){
+  if(targetType==='activity')renderTimeline(targetId);
+  if(document.getElementById('view-journal').classList.contains('active'))renderJournal();
+}
+function threadHtml(targetId,targetType,entryId,coms){
+  const comHtml=coms.map(c=>`
+    <div class="comment ${c.starred?'starred':''}">
+      <button class="star" onclick="toggleStar('${c.id}')" aria-label="Star">★</button>
+      <div class="cbody">${esc(c.text)}
+        <div class="cmeta">${esc(c.author||'')} · ${fmtDate(c.createdAt)}</div></div>
+      <button class="cdel" onclick="deleteComment('${c.id}')">✕</button>
+    </div>`).join('');
+  return `${comHtml||'<div style="font-size:.8rem;color:var(--graphite)">No comments yet.</div>'}
+    <div class="caddrow">
+      <input type="text" id="cin-${targetId}" placeholder="Add a comment…" onkeydown="if(event.key==='Enter')addComment('${targetId}','${targetType}','${entryId||''}')">
+      <button onclick="addComment('${targetId}','${targetType}','${entryId||''}')">Post</button>
+    </div>`;
+}
+function toggleJThread(id){
+  if(openThreads.has(id))openThreads.delete(id);else openThreads.add(id);
+  renderJournal();
+}
+async function addComment(targetId,targetType,entryId){
+  const inp=document.getElementById('cin-'+targetId);
   const text=inp.value.trim();if(!text)return;
   const author=(session&&session.user.email)||'me';
-  const c={id:uid(),activityId:actId,entryId,author,text,starred:false,createdAt:new Date().toISOString()};
-  if(viewing){ // coach commenting on someone else's journal → cloud only
+  const c={id:uid(),activityId:targetId,targetType:targetType||'activity',entryId:entryId||null,author,text,starred:false,createdAt:new Date().toISOString()};
+  const row={id:c.id,owner_id:viewing?viewing.owner_id:(session?session.user.id:null),activity_id:targetId,target_type:c.targetType,entry_id:c.entryId,author_email:author,text,starred:false,created_at:c.createdAt};
+  if(viewing){
     if(!sb||!session){toast('Log in to comment');return;}
-    const {error}=await sb.from('comments').insert({id:c.id,owner_id:viewing.owner_id,activity_id:actId,entry_id:entryId,author_email:author,text,starred:false,created_at:c.createdAt});
-    if(error){toast(error.message);return;}
+    const {error}=await sb.from('comments').insert(row);
+    if(error){toast(errMsg(error));return;}
     viewerData.comments.push(c);
   }else{
     store.comments.push(c);saveStore();
-    if(sb&&session)push('comments',{id:c.id,owner_id:session.user.id,activity_id:actId,entry_id:entryId,author_email:author,text,starred:false,created_at:c.createdAt});
+    if(sb&&session)push('comments',row);
   }
-  renderTimeline(actId);
+  refreshAfterComment(c.targetType,targetId);
 }
 async function toggleStar(cid){
   const list=ds().comments;
@@ -781,7 +818,7 @@ async function toggleStar(cid){
   c.starred=!c.starred;
   if(viewing){if(sb&&session)await sb.from('comments').update({starred:c.starred}).eq('id',cid);}
   else{saveStore();if(sb&&session)sb.from('comments').update({starred:c.starred}).eq('id',cid).then(()=>{});}
-  renderTimeline(c.activityId);if(document.getElementById('view-journal').classList.contains('active'))renderJournal();
+  refreshAfterComment(c.targetType||'activity',c.activityId);
 }
 async function deleteComment(cid){
   const list=ds().comments;
@@ -789,7 +826,7 @@ async function deleteComment(cid){
   if(viewing){if(sb&&session)await sb.from('comments').delete().eq('id',cid);viewerData.comments=list.filter(x=>x.id!==cid);}
   else{store.comments=list.filter(x=>x.id!==cid);saveStore();
     if(sb&&session)sb.from('comments').delete().eq('id',cid).then(()=>{});}
-  renderTimeline(c.activityId);if(document.getElementById('view-journal').classList.contains('active'))renderJournal();
+  refreshAfterComment(c.targetType||'activity',c.activityId);
 }
 
 /* =============== timeline =============== */
@@ -829,13 +866,6 @@ function renderTimeline(keepOpen){
       const coms=commentsFor(a.id);
       const starred=coms.filter(c=>c.starred).length;
       const open=openThreads.has(a.id);
-      const comHtml=coms.map(c=>`
-        <div class="comment ${c.starred?'starred':''}">
-          <button class="star" onclick="toggleStar('${c.id}')" aria-label="Star">★</button>
-          <div class="cbody">${esc(c.text)}
-            <div class="cmeta">${esc(c.author||'')} · ${fmtDate(c.createdAt)}</div></div>
-          <button class="cdel" onclick="deleteComment('${c.id}')">✕</button>
-        </div>`).join('');
       return `<div class="arowline ${a.energy==='ana'?'e-ana':a.energy==='cata'?'e-cata':''} ${open?'copen':''}" id="ar-${a.id}">
         <div class="rowtop">
           <div class="tcol">${fmtTime(aStart)}–${fmtTime(aEnd)}<span class="dur">${fmtDur(a.minutes)}</span></div>
@@ -849,17 +879,13 @@ function renderTimeline(keepOpen){
             ${a.description?`<div class="desc">${esc(a.description)}</div>`:''}
           </div>
           <div class="rowbtns">
-            <button onclick="toggleThread('${a.id}')">${open?'▴':'▾'}${(a.state||coms.length)?'':''} ${coms.length?'💬'+coms.length:''}${starred?' ★'+starred:''}</button>
+            <button onclick="toggleThread('${a.id}')">${open?'▴':'▾'}${a.state?' ❝':''}${coms.length?' 💬'+coms.length:''}${starred?' ★'+starred:''}</button>
             ${!viewing?`<button onclick="editEntry('${entryId}')">edit</button>`:''}
           </div>
         </div>
         <div class="cthread">
           ${a.state?`<div class="state" style="margin-bottom:8px">“${esc(a.state)}”</div>`:''}
-          ${comHtml||'<div style="font-size:.8rem;color:var(--graphite)">No comments yet.</div>'}
-          <div class="caddrow">
-            <input type="text" id="cin-${a.id}" placeholder="Add a comment…" onkeydown="if(event.key==='Enter')addComment('${a.id}','${entryId}')">
-            <button onclick="addComment('${a.id}','${entryId}')">Post</button>
-          </div>
+          ${threadHtml(a.id,'activity',entryId,coms)}
         </div>
       </div>`;}).join('');
     const delBtn=!viewing&&dayEntries.length?'':''; 
@@ -908,6 +934,7 @@ function renderComments(){
   const ctx={};
   D.entries.forEach(e=>e.activities.forEach(a=>{
     ctx[a.id]={label:a.description||(a.categoryLabel||D.cat(a.category).label),day:dayKey(e.start)};}));
+  D.documents.forEach(d=>{ctx[d.id]={label:d.title||'Untitled',day:dayKey(d.updatedAt||d.createdAt)};});
   let list=[...D.comments].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
   if(comFilter==='star')list=list.filter(c=>c.starred);
   if(comFilter==='coach')list=list.filter(c=>(c.author||'')&&(c.author||'').toLowerCase()!==ownerEmail.toLowerCase());
@@ -915,7 +942,7 @@ function renderComments(){
   if(!list.length){el.innerHTML='<p style="color:var(--graphite);font-size:.88rem">'+(comFilter==='all'?'No comments yet — open a timeline row to leave one.':comFilter==='star'?'No gold-starred comments yet.':'No coach comments yet.')+'</p>';return;}
   const shown=showAllComments?list:list.slice(0,5);
   el.innerHTML='<div class="reflect">'+shown.map(c=>{
-    const cx=ctx[c.activityId];
+    const cx=c.targetType==='reflection'?{label:'Daily reflection',day:c.activityId}:ctx[c.activityId];
     return `<div class="comment ${c.starred?'starred':''}">
       <button class="star" onclick="toggleStar('${c.id}')" aria-label="Star">★</button>
       <div class="cbody">${esc(c.text)}
@@ -932,9 +959,13 @@ function reflectCard(dk,r,isToday){
         <button onclick="saveReflection('${dk}')">Save</button></div></div>
       <textarea id="rtext-${dk}" placeholder="How did today feel, zoomed out?">${esc(r?r.text:'')}</textarea></div>`;
   }
+  const coms=commentsFor(dk);
+  const open=openThreads.has(dk);
+  const canComment=!!(r&&r.text);
   return `<div class="reflect"><div class="rhead"><span>${dayLabel(dk)} ${r&&r.shared?'<span class="sharetag">shared</span>':''}</span>
-    ${!viewing?`<div class="rbtns"><button onclick="editReflection('${dk}')">${r&&r.text?'Edit':'Write'}</button></div>`:''}</div>
-    <div class="rtext ${r&&r.text?'':'emptyr'}">${r&&r.text?esc(r.text):(viewing?'Not shared or not written.':'No reflection yet.')}</div></div>`;
+    <div class="rbtns">${canComment?`<button onclick="toggleJThread('${dk}')">${open?'▴':'▾'} 💬${coms.length?' '+coms.length:''}</button>`:''}${!viewing?`<button onclick="editReflection('${dk}')">${r&&r.text?'Edit':'Write'}</button>`:''}</div></div>
+    <div class="rtext ${r&&r.text?'':'emptyr'}">${r&&r.text?esc(r.text):(viewing?'Not shared or not written.':'No reflection yet.')}</div>
+    ${open&&canComment?`<div class="cthread" style="display:block;margin-top:10px;border-top:1px dashed var(--line);padding-top:8px">${threadHtml(dk,'reflection','',coms)}</div>`:''}</div>`;
 }
 function editReflection(dk){editingReflection=dk;renderJournal();
   setTimeout(()=>{const t=document.getElementById('rtext-'+dk);if(t)t.focus();},50);}
@@ -969,10 +1000,12 @@ function renderDocs(){
           <button class="setbtn danger" style="margin:0;border:none;padding:0" onclick="deleteDoc('${d.id}')">Delete</button>
           <button onclick="saveDoc('${d.id}')">Save</button></div></div></div>`;
     }
+    const coms=commentsFor(d.id);const open=openThreads.has(d.id);
     return `<div class="doc"><div class="rhead"><span>${esc(d.title||'Untitled')} ${d.shared?'<span class="sharetag">shared</span>':''}</span>
-      ${!viewing?`<div class="rbtns"><button onclick="editDoc('${d.id}')">Edit</button></div>`:''}</div>
+      <div class="rbtns"><button onclick="toggleJThread('${d.id}')">${open?'▴':'▾'} 💬${coms.length?' '+coms.length:''}</button>${!viewing?`<button onclick="editDoc('${d.id}')">Edit</button>`:''}</div></div>
       <div class="rtext">${esc(d.body)}</div>
-      <div class="docmeta">created ${fmtDate(d.createdAt)} · updated ${fmtDate(d.updatedAt)}</div></div>`;
+      <div class="docmeta">created ${fmtDate(d.createdAt)} · updated ${fmtDate(d.updatedAt)}</div>
+      ${open?`<div class="cthread" style="display:block;margin-top:10px;border-top:1px dashed var(--line);padding-top:8px">${threadHtml(d.id,'document','',coms)}</div>`:''}</div>`;
   }).join(''):'<p style="color:var(--graphite);font-size:.88rem">No documents yet — lists, goals, anything worth keeping.</p>';
 }
 function newDoc(){
@@ -1036,6 +1069,7 @@ function renderAnalysis(){
   for(let h=0;h<24;h++){const p=pct(rated.filter(a=>a.hour===h));if(p!=null)hourRows.push({l:(h%12||12)+(h<12?'a':'p'),p});}
   // categories
   const totalMins=acts.reduce((s,a)=>s+a.mins,0);
+  const daysCount=new Set(acts.map(a=>a.day)).size||1;
   const catAgg={};
   acts.forEach(a=>{const k=a.cat;(catAgg[k]||={label:a.catLabel,mins:0,ana:0,cata:0});catAgg[k].mins+=a.mins;
     if(a.energy==='ana')catAgg[k].ana+=a.mins;if(a.energy==='cata')catAgg[k].cata+=a.mins;});
@@ -1045,6 +1079,7 @@ function renderAnalysis(){
   const aggRows=(agg)=>Object.values(agg).sort((a,b)=>b.mins-a.mins).slice(0,8).map(r=>{
     const rp=(r.ana+r.cata)?Math.round(r.ana/(r.ana+r.cata)*100):null;
     return `<tr><td>${esc(r.label)}</td><td class="num">${(100*r.mins/totalMins).toFixed(0)}% of time</td>
+      <td class="num">${(r.mins/60/daysCount).toFixed(1)}h/day</td>
       <td class="num ${rp!=null&&rp>=50?'pos':''}">${rp!=null?rp+'% ana':'—'}</td></tr>`;}).join('');
   const bar=(rows)=>rows.map(r=>`<div class="brow"><span class="bl">${r.l}</span>
     <div class="btrack"><div class="bfill" style="width:${r.p}%"></div><div class="bfill c" style="width:${100-r.p}%"></div></div>
