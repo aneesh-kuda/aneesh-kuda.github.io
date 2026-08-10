@@ -1,1 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Seed Oil Sourcing — Margin & Guest Impact</title>
+<meta property="og:title" content="Seed Oil Sourcing: Margin & Guest Impact">
+<meta property="og:description" content="A working model of the cost-vs-value trade behind a systemwide oil switch at Chipotle — built by Aneesh Kudaravalli.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Seed Oil Sourcing: Margin & Guest Impact">
+<meta name="twitter:description" content="A working model of the cost-vs-value trade behind a systemwide oil switch at Chipotle.">
+<meta name="description" content="A working model of the cost-vs-value trade behind a systemwide oil switch at Chipotle — built by Aneesh Kudaravalli.">
+<link rel="icon" href="data:,">
+<style>
+  :root{
+    --ink: #1c2b3a;
+    --ink-soft: #5c6570;
+    --rule: #dcdad2;
+    --panel: #f7f6f2;
+    --paper: #ffffff;
+    --accent: #8a1b2d;
+    --accent-soft: #f4e9ea;
+    --gold: #b8842f;
+    --gold-soft: #faf1e0;
+    --positive: #2f6b3a;
+    --negative: #8a1b2d;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper);}
+  body{
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    min-height:100vh;
+  }
+  .wrap{max-width: 940px; margin:0 auto; padding: 48px 40px 70px;}
+  @media (max-width: 640px){ .wrap{ padding: 32px 20px 50px; } }
 
+  header{
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 22px;
+    margin-bottom: 28px;
+  }
+  .eyebrow{
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    font-size: 11px;
+    color: var(--accent);
+    margin: 0 0 8px;
+    font-weight:600;
+  }
+  h1{
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    font-size: clamp(26px, 4vw, 34px);
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .sub{
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .dek{
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+    max-width: 680px;
+    margin: 0 0 30px;
+  }
+
+  /* key assumptions strip */
+  .givens{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-bottom: 30px;
+  }
+  @media (max-width: 640px){ .givens{ grid-template-columns: 1fr; } }
+  .given{
+    background: var(--panel);
+    padding: 16px 18px;
+  }
+  .given .k{
+    color: var(--ink-soft);
+    text-transform:uppercase; letter-spacing:.06em; font-size:10.5px;
+    display:block; margin-bottom:6px;
+  }
+  .given .v{ color: var(--ink); font-weight:700; font-size: 20px; font-family: Georgia, serif;}
+  .given .n{ color: var(--ink-soft); font-size: 11px; display:block; margin-top:4px;}
+
+  .quick-impact{
+    display:flex;
+    align-items:baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--ink);
+    border-radius: 3px;
+    padding: 14px 20px;
+    margin-bottom: 34px;
+  }
+  .qi-label{
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+  .qi-value{
+    font-family: Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .qi-value.pos{ color: var(--positive); }
+  .qi-value.neg{ color: var(--negative); }
+  .qi-sub{
+    font-size: 11.5px;
+    color: var(--ink-soft);
+  }
+
+  .stations{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 34px;
+  }
+  @media (max-width: 720px){ .stations{ grid-template-columns: 1fr; } }
+
+  .station{
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 22px 24px 24px;
+  }
+  .station-label{
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px;
+  }
+
+  .field{ margin-bottom: 22px; }
+  .field:last-child{ margin-bottom: 0; }
+  .field-top{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-bottom: 9px;
+  }
+  .field-top label{ font-size: 13.5px; color: var(--ink); font-weight:500;}
+  .field-top .val{
+    font-size: 14px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .station.cost .field-top .val{ color: var(--accent); }
+  .station.guest .field-top .val{ color: var(--positive); }
+
+  input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    width:100%; height: 3px;
+    background: var(--rule);
+    border-radius: 2px;
+    outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:15px; height:15px;
+    border-radius:50%;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    cursor:pointer;
+    margin-top:-6px;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:13px; height:13px; border-radius:50%;
+    background: var(--paper); border: 2px solid var(--ink); cursor:pointer;
+  }
+
+  .note{
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    line-height:1.45;
+  }
+
+  /* output table */
+  .sheet{
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+  .sheet-head{
+    background: var(--ink);
+    color: #fff;
+    padding: 13px 20px;
+    display:flex; justify-content:space-between; align-items:baseline;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .sheet-head .t1{ font-weight:600; font-size:13.5px; }
+  .sheet-head .t2{ font-size: 11px; color: #c6ccd3; }
+
+  table{ width:100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th{
+    text-align:left;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--ink-soft);
+    background: var(--panel);
+    padding: 9px 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  thead th.num{ text-align:right; }
+  tbody td{
+    padding: 8px 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  tbody td.num{ text-align:right; font-variant-numeric: tabular-nums; }
+  tbody td.num.pos{ color: var(--positive); }
+  tbody td.num.neg{ color: var(--negative); }
+  tbody tr.section td{
+    background: var(--panel);
+    font-weight:700;
+    font-size: 10.5px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color: var(--ink-soft);
+    padding-top:9px; padding-bottom:9px;
+  }
+  tbody tr.formula td{ color: var(--ink-soft); font-size:11.5px; font-style: italic; }
+  tbody tr.formula td.num{ font-style: normal; }
+  tbody tr.callout td{ font-weight: 700; }
+  tbody tr.callout td.num.neg{ color: var(--negative); }
+  tbody tr.callout td.num.pos{ color: var(--positive); }
+  tbody tr.result td{
+    font-weight:700; font-size:15px;
+    border-top: 2px solid var(--ink);
+    border-bottom: none;
+    padding-top:12px; padding-bottom:12px;
+  }
+  tbody tr.result td.num.pos{ color: var(--positive); }
+  tbody tr.result td.num.neg{ color: var(--negative); }
+  .bps{ font-size:11px; font-weight:400; color: var(--ink-soft); }
+
+  /* next steps */
+  .next-steps{
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 26px 28px 28px;
+  }
+  .next-steps > h3{
+    font-family: Georgia, serif;
+    font-size: 16px;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+  .step{
+    display:flex; gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .step:first-of-type{ border-top: none; padding-top: 0; }
+  .step-num{
+    flex: 0 0 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink-soft);
+    color: var(--ink-soft);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 12.5px; font-weight:700;
+    font-family: Georgia, serif;
+  }
+  .step-body h4{
+    margin: 2px 0 5px;
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+  .step-body p{
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .step.highlight{
+    background: var(--gold-soft);
+    border: 1px solid #e9d5a8;
+    border-radius: 4px;
+    margin-top: 16px;
+    padding: 20px 22px;
+  }
+  .step.highlight .step-num{
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #fff;
+  }
+  .step.highlight .step-body h4{
+    font-size: 14.5px;
+    color: #6b4c17;
+  }
+  .step.highlight .step-body p{ color: #6b4c17; }
+  .step.highlight .step-body p.emph{
+    margin-top: 12px;
+    font-weight: 600;
+  }
+  .substeps p{
+    margin: 0 0 9px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #6b4c17;
+  }
+  .substeps p:last-child{ margin-bottom: 0; }
+  .substeps p b{ color: #4a3410; }
+
+  footer{
+    margin-top: 34px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--rule);
+    padding-top: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Product Analysis</p>
+    <h1>Seed Oil Sourcing: Margin &amp; Guest Impact</h1>
+    <p class="sub">A working model of the cost-versus-value trade behind a systemwide oil switch.</p>
+  </header>
+
+  <p class="dek">Chipotle has flagged rising oil costs as a margin headwind, and is backing Zero Acre Farms through Cultivate Next to move away from seed oils over time. This model separates the two questions worth asking before that decision: what it costs, and what it's worth.</p>
+
+  <div class="givens">
+    <div class="given">
+      <span class="k">Oil &amp; fry, share of food cost</span>
+      <span class="v" id="oilShareGiven">2.0%</span>
+      <span class="n">Estimate</span>
+    </div>
+    <div class="given">
+      <span class="k">Average check</span>
+      <span class="v" id="checkGiven">$14.50</span>
+      <span class="n">Estimate</span>
+    </div>
+    <div class="given">
+      <span class="k">FY25 food cost base</span>
+      <span class="v" id="foodCostGiven">–</span>
+      <span class="n">29.6% of $11.9B revenue, as reported</span>
+    </div>
+  </div>
+
+  <div class="stations">
+
+    <div class="station cost">
+      <p class="station-label">Cost of Goods</p>
+
+      <div class="field">
+        <div class="field-top">
+          <label for="premium">Premium oil cost multiple vs. current blend</label>
+          <span class="val" id="premiumVal">2.5×</span>
+        </div>
+        <input type="range" id="premium" min="1.2" max="5" step="0.1" value="2.5">
+        <p class="note">Commodity blends are cheap; avocado and cultured oils run well above that today. This multiple is the swing factor on the cost side.</p>
+      </div>
+
+      <div class="field">
+        <div class="field-top">
+          <label for="rollout">Rollout — share of system converted</label>
+          <span class="val" id="rolloutVal">100%</span>
+        </div>
+        <input type="range" id="rollout" min="10" max="100" step="5" value="100">
+        <p class="note">A pilot in a few markets vs. all 4,056 restaurants changes both the cost exposure and the guest response.</p>
+      </div>
+    </div>
+
+    <div class="station guest">
+      <p class="station-label">Guest Response</p>
+
+      <div class="field">
+        <div class="field-top">
+          <label for="segment">Guests who'd actually change behavior for it</label>
+          <span class="val" id="segmentVal">10%</span>
+        </div>
+        <input type="range" id="segment" min="2" max="30" step="1" value="10">
+        <p class="note">Not "cares about health" — cares enough to visit more, or switch from a competitor, specifically over oil.</p>
+      </div>
+
+      <div class="field">
+        <div class="field-top">
+          <label for="lift">Visit frequency lift, within that segment</label>
+          <span class="val" id="liftVal">15%</span>
+        </div>
+        <input type="range" id="lift" min="1" max="25" step="1" value="15">
+        <p class="note">For scale: Q4'25 comp sales fell 2.5% on a 3.2% transaction decline. A 15% lift in a 10% segment moves comps roughly 1.5 points.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="quick-impact">
+    <span class="qi-label">Gross Margin Impact</span>
+    <span class="qi-value" id="quickImpactValue">–</span>
+    <span class="qi-sub" id="quickImpactSub"></span>
+  </div>
+
+  <div class="sheet">
+    <div class="sheet-head">
+      <span class="t1">Gross Margin Impact — Annualized, Systemwide</span>
+      <span class="t2">oil cost only — excludes labor, occupancy, G&amp;A, go-to-market spend</span>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Line item</th><th class="num">Value</th></tr>
+      </thead>
+      <tbody id="sheetBody">
+        <!-- filled by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="next-steps">
+    <h3>Next Steps</h3>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Validate assumptions and analysis with internal data</h4>
+        <p>Replace the estimated oil spend and average check above with actual figures.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Supply chain considerations for net margin impact</h4>
+        <p>Sourcing, storage, and logistics cost of a less commoditized oil at this volume — the piece that would move this from a gross to a net margin view.</p>
+      </div>
+    </div>
+
+    <div class="step highlight">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Validate the guest-side numbers</h4>
+        <div class="substeps">
+          <p><b>CRM segmentation</b> on existing diet patterns (low-carb, no-dairy, etc.) gives a first read on <b>guests who'd change behavior</b>.</p>
+          <p><b>Customer survey</b> on willingness to switch sharpens that same number, and gives an early read on <b>frequency lift</b>.</p>
+          <p><b>Pilot marketing test</b> in a real Zero Acre market builds real confidence behind <b>frequency lift</b>, specifically.</p>
+        </div>
+        <p class="emph">What I'd actually want to know: how connected are CRM, loyalty, and digital ordering right now — and do they support testing and experimenting like this?</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Built by Aneesh Kudaravalli — aneeshkuda.com
+  </footer>
+
+</div>
+
+<script>
+function fmt(n){
+  const sign = n < 0 ? "-" : "";
+  n = Math.abs(n);
+  if(n >= 1e9) return sign + "$" + (n/1e9).toFixed(2) + "B";
+  if(n >= 1e6) return sign + "$" + (n/1e6).toFixed(1) + "M";
+  if(n >= 1e3) return sign + "$" + (n/1e3).toFixed(0) + "K";
+  return sign + "$" + n.toFixed(0);
+}
+function fmtNum(n){
+  if(n >= 1e6) return (n/1e6).toFixed(2) + "M";
+  if(n >= 1e3) return (n/1e3).toFixed(0) + "K";
+  return n.toFixed(0);
+}
+
+const REVENUE = 11.9e9;
+const FOOD_COST_PCT = 0.296;
+const OIL_SHARE = 0.02;
+const CHECK = 14.50;
+
+function estGuestVisitsBase(check){
+  return REVENUE / check;
+}
+
+document.getElementById("foodCostGiven").textContent = fmt(REVENUE * FOOD_COST_PCT);
+document.getElementById("oilShareGiven").textContent = (OIL_SHARE*100).toFixed(1) + "%";
+document.getElementById("checkGiven").textContent = "$" + CHECK.toFixed(2);
+
+const ids = ["premium","rollout","segment","lift"];
+const els = {};
+ids.forEach(id => els[id] = document.getElementById(id));
+
+function row(item, value, opts){
+  opts = opts || {};
+  const cls = opts.cls ? ' class="'+opts.cls+'"' : '';
+  const numCls = opts.numCls ? ' class="num '+opts.numCls+'"' : ' class="num"';
+  return '<tr'+cls+'><td>'+item+'</td><td'+numCls+'>'+value+'</td></tr>';
+}
+
+function update(){
+  const premium = parseFloat(els.premium.value);
+  const rollout = parseFloat(els.rollout.value) / 100;
+  const segment = parseFloat(els.segment.value) / 100;
+  const lift = parseFloat(els.lift.value) / 100;
+
+  document.getElementById("premiumVal").textContent = els.premium.value + "×";
+  document.getElementById("rolloutVal").textContent = els.rollout.value + "%";
+  document.getElementById("segmentVal").textContent = els.segment.value + "%";
+  document.getElementById("liftVal").textContent = els.lift.value + "%";
+
+  const totalFoodCost = REVENUE * FOOD_COST_PCT;
+  const baseOilSpend = totalFoodCost * OIL_SHARE;
+  const incrementalCost = baseOilSpend * (premium - 1) * rollout;
+
+  const totalVisits = estGuestVisitsBase(CHECK);
+  const segmentVisits = totalVisits * segment;
+  const extraVisits = segmentVisits * lift * rollout;
+  const incrementalRevenue = extraVisits * CHECK;
+  const incrementalGrossMargin = incrementalRevenue * (1 - FOOD_COST_PCT);
+
+  const net = incrementalGrossMargin - incrementalCost;
+  const bps = (net / REVENUE) * 10000;
+  const netCls = net >= 0 ? "pos" : "neg";
+
+  const updatedOilSpend = baseOilSpend * (1 + rollout * (premium - 1));
+  const rolloutPct = els.rollout.value;
+  const unchangedPct = (100 - parseFloat(rolloutPct));
+
+  let html = "";
+  html += row("<b>Cost side</b>", "", {cls:"section"});
+  html += row("Base annual oil &amp; fry spend", fmt(baseOilSpend));
+  html += row("oil share × food cost base", "2.0% × " + fmt(totalFoodCost), {cls:"formula"});
+  html += row("Rollout — share of system converted", rolloutPct + "%");
+  html += row("Updated oil spend", fmt(updatedOilSpend));
+  html += row(rolloutPct + "% converted at " + premium.toFixed(1) + "×, " + unchangedPct + "% unchanged", "", {cls:"formula"});
+  html += row("Incremental oil cost", "+" + fmt(incrementalCost), {cls:"callout", numCls:"neg"});
+
+  html += row("<b>Guest side</b>", "", {cls:"section"});
+  html += row("Est. annual system transactions", fmtNum(totalVisits));
+  html += row("revenue ÷ average check", fmt(REVENUE) + " ÷ " + "$" + CHECK.toFixed(2), {cls:"formula"});
+  html += row("Guests in responsive segment", els.segment.value + "% → " + fmtNum(segmentVisits) + " visits/yr");
+  html += row("Extra visits from frequency lift", fmtNum(extraVisits));
+  html += row("Incremental revenue", "+" + fmt(incrementalRevenue), {numCls:"pos"});
+  html += row("Incremental gross margin", "+" + fmt(incrementalGrossMargin) + " <span class='bps'>(rev × (1 − 29.6%))</span>", {numCls:"pos"});
+
+  html += row("<b>Gross Margin Impact</b>", (net>=0?"+":"-") + fmt(net) + " <span class='bps'>(" + Math.abs(bps).toFixed(0) + " bps of revenue)</span>", {cls:"result", numCls:netCls});
+
+  document.getElementById("sheetBody").innerHTML = html;
+
+  const qiVal = document.getElementById("quickImpactValue");
+  qiVal.textContent = (net >= 0 ? "+" : "-") + fmt(net);
+  qiVal.className = "qi-value " + netCls;
+  document.getElementById("quickImpactSub").textContent =
+    (net >= 0 ? "accretive" : "dilutive") + " · ~" + Math.abs(bps).toFixed(0) + " bps of revenue";
+}
+
+ids.forEach(id => els[id].addEventListener("input", update));
+update();
+</script>
+
+</body>
+</html>
