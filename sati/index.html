@@ -439,7 +439,9 @@ async function syncAll(manual){
     const refRows=Object.entries(store.reflections).map(([day,r])=>({user_id:uidS,day,text:r.text,shared:!!r.shared,updated_at:r.updatedAt}));
     if(refRows.length){const {error}=await sb.from('reflections').upsert(refRows);if(error)throw error;}
     if(store.documents.length){const {error}=await sb.from('documents').upsert(store.documents.map(d=>({id:d.id,user_id:uidS,title:d.title,body:d.body,shared:!!d.shared,created_at:d.createdAt,updated_at:d.updatedAt})));if(error)throw error;}
-    if(store.comments.length){const {error}=await sb.from('comments').upsert(store.comments.map(c=>({id:c.id,owner_id:uidS,activity_id:c.activityId,target_type:c.targetType||'activity',entry_id:c.entryId,author_email:c.author||session.user.email,text:c.text,starred:!!c.starred,created_at:c.createdAt})));if(error)throw error;}
+    const myEmail=session.user.email.toLowerCase();
+    const myComments=store.comments.filter(c=>!c.author||c.author==='me'||c.author.toLowerCase()===myEmail);
+    if(myComments.length){const {error}=await sb.from('comments').upsert(myComments.map(c=>({id:c.id,owner_id:uidS,activity_id:c.activityId,target_type:c.targetType||'activity',entry_id:c.entryId,author_email:(c.author&&c.author!=='me')?c.author:session.user.email,text:c.text,starred:!!c.starred,created_at:c.createdAt})));if(error)throw error;}
     await sb.from('user_settings').upsert({user_id:uidS,categories:store.categories,streak_picks:store.streakPicks,updated_at:store.settingsUpdatedAt||new Date().toISOString()});
     const pull=async(t,q)=>{const {data,error}=await q;if(error)throw error;return data||[];};
     const remoteE=await pull('entries',sb.from('entries').select('*').eq('user_id',uidS));
