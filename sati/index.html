@@ -184,20 +184,48 @@ section.view.active{display:block}
 .inlineadd{display:flex;gap:8px;margin-top:8px}
 .inlineadd input{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--paper);font-size:.88rem}
 /* calendar */
-.calwrap{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:14px 0}
+/* analysis v2 */
+.chartwrap{width:100%;overflow:hidden}
+.chartwrap svg{width:100%;height:auto;display:block}
+.floorrow{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:.85rem}
+.floorrow:last-child{border-bottom:none}
+.floorrow .wk{font-family:var(--mono);font-size:.72rem;color:var(--graphite);flex:1}
+.pillnum{font-family:var(--mono);font-size:.72rem;font-weight:600;color:#fff;padding:2px 9px;border-radius:999px}
+.trendline{font-size:.85rem;line-height:1.5;color:var(--ink);margin-top:10px}
+.hstrip{margin-bottom:12px}
+.hstrip .hlabel{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.hstrip .hlabel b{font-size:.85rem;font-weight:700}
+.hstrip .hlabel span{font-family:var(--mono);font-size:.7rem;color:var(--graphite)}
+.hdots{display:grid;grid-template-columns:repeat(28,minmax(0,1fr));gap:3px}
+.hdot{height:14px;border-radius:3px;background:var(--paper);border:1px solid var(--line)}
+.hdot.on{background:var(--ana);border-color:var(--ana)}
+.hdot.today{outline:1.5px solid var(--ink);outline-offset:1px}
+.cmprow{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.cmprow:last-child{border-bottom:none}
+.cmprow .mname{flex:1;font-size:.88rem}
+.cmpbar{width:84px;height:10px;border-radius:5px;background:var(--paper);overflow:hidden;flex:none}
+.cmpbar i{display:block;height:100%}
+.cmpval{width:34px;font-family:var(--mono);font-size:.7rem;color:var(--graphite);text-align:right;flex:none}
+.cmplegend{display:flex;gap:14px;font-family:var(--mono);font-size:.68rem;color:var(--graphite);margin-bottom:10px}
+.cmplegend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.gwall .gitem{padding:10px 0;border-bottom:1px dashed var(--line)}
+.gwall .gitem:last-child{border-bottom:none}
+.gwall .gday{font-family:var(--mono);font-size:.66rem;color:var(--graphite);margin-bottom:3px}
+.gwall .gtext{font-size:.95rem;line-height:1.45}
+.calwrap{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin:14px 0;overflow:hidden}
 .calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .calhead h3{font-size:.95rem;font-weight:900}
 .calhead button{color:var(--cobalt);font-weight:700;font-size:1rem;padding:4px 10px}
-.caldow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
-.caldow span{text-align:center;font-family:var(--mono);font-size:.6rem;color:var(--graphite)}
-.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.calcell{aspect-ratio:1;border-radius:8px;background:var(--paper);border:1px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);font-size:.72rem;color:var(--graphite);position:relative;padding:0}
+.caldow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:4px}
+.caldow span{text-align:center;font-family:var(--mono);font-size:.6rem;color:var(--graphite);min-width:0;overflow:hidden}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.calcell{height:38px;min-width:0;box-sizing:border-box;border-radius:8px;background:var(--paper);border:1px solid transparent;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.72rem;line-height:1;color:var(--graphite);position:relative;padding:0;overflow:hidden}
 .calcell.has{color:#fff;font-weight:600}
 .calcell.today{border-color:var(--ink)}
 .calcell.sel{outline:2px solid var(--cobalt);outline-offset:1px}
-.calcell .pip{position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.75}
+.calcell .pip{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.8}
 .calcell.empty{visibility:hidden}
-.callegend{display:flex;align-items:center;gap:6px;margin-top:10px;font-family:var(--mono);font-size:.62rem;color:var(--graphite)}
+.callegend{display:flex;align-items:center;gap:6px;margin-top:10px;font-family:var(--mono);font-size:.62rem;color:var(--graphite);flex-wrap:wrap}
 .callegend .sw{width:14px;height:8px;border-radius:3px}
 /* daily entry */
 .dcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
@@ -1017,8 +1045,6 @@ const HABITS=[
   {k:'move',    label:'Move body 5 min',cat:'fitness',sub:null},
   {k:'reach',   label:'Reach out to 1 person',cat:'social',sub:null}
 ];
-const DRIFTS=['Scrolling','Got high','Vape','Chess','Porn','Stayed up','Avoided work'];
-const SHIFTS=['Stretch','Walk','Calisthenics','Reflect','Healthy snack','Read','Connect','Meditate','Breathe','Create 5 min','Learn 5 min'];
 
 function ratingColor(n){ // 1 → red, 10 → green
   if(!n) return null;
@@ -1093,8 +1119,6 @@ function toggleHabit(dk,k){
   setDayField(dk,'habits.'+k,!habitDone(d,auto,k));
   renderJournal();
 }
-function pickDrift(dk,v){const d=getDay(dk);setDayField(dk,'drift',(d&&d.drift===v)?'':v);renderJournal();}
-function pickShift(dk,v){const d=getDay(dk);setDayField(dk,'shift',(d&&d.shift===v)?'':v);renderJournal();}
 function addGratSlot(){gratSlots=Math.min(3,gratSlots+1);renderJournal();}
 
 /* ---- calendar ---- */
@@ -1164,7 +1188,7 @@ function dayEntryCard(dk){
   }
   const filled=(d.gratitude||[]).filter(g=>g&&g.trim()).length;
   const slots=Math.max(gratSlots,Math.max(1,filled));
-  const needsKind = (d.rating&&d.rating<=5) || (d.drift&&!d.shift);
+  const needsKind = !!(d.rating&&d.rating<=5);
   return `<div class="dcard">
 
   <div class="dsec">
@@ -1205,12 +1229,8 @@ function dayEntryCard(dk){
 
   <div class="dsec">
     <span class="dlabel">Drift & shift</span>
-    <div class="breathe">Sit with the drift. Breathe. The peace you're reaching for arises from within.</div>
-    <div class="chips">${DRIFTS.map(v=>`<button class="${d.drift===v?'sel':''}" onclick="pickDrift('${dk}','${v}')">${v}</button>`).join('')}</div>
-    <div style="font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--graphite);margin:10px 0 6px">Shifted to</div>
-    <div class="chips subs">${SHIFTS.map(v=>`<button class="${d.shift===v?'sel':''}" onclick="pickShift('${dk}','${v}')">${v}</button>`).join('')}</div>
-    <input type="text" style="margin-top:8px" value="${escAttr(d.driftNote)}" placeholder="What happened in between? (optional)"
-      oninput="setDayField('${dk}','driftNote',this.value)">
+    <div class="dhint">Sit with it first. Breathe.</div>
+    <textarea placeholder="Optional." oninput="setDayField('${dk}','driftNote',this.value)">${esc(d.driftNote)}</textarea>
   </div>
 
   ${needsKind?`<div class="kindbox">
@@ -1246,8 +1266,8 @@ function readOnlyDay(d,dk){
       const done=habitDone(d,auto,hb.k);
       return `<div class="habit ${done?'done':''}"><span class="box">${done?'✓':''}</span><span class="hname">${hb.label}</span></div>`;}).join('')}</div>
     ${g.length?`<div style="margin-bottom:8px"><span class="dlabel">Grateful for</span>${g.map(x=>`<div class="rtext">• ${esc(x)}</div>`).join('')}</div>`:''}
-    ${(d.drift||d.shift)?`<div style="margin-bottom:8px"><span class="dlabel">Drift → shift</span>
-      <div class="rtext">${esc(d.drift||'—')} → ${esc(d.shift||'—')}${d.driftNote?' · '+esc(d.driftNote):''}</div></div>`:''}
+    ${(d.driftNote||d.drift||d.shift)?`<div style="margin-bottom:8px"><span class="dlabel">Drift & shift</span>
+      <div class="rtext">${d.driftNote?esc(d.driftNote):esc((d.drift||'—')+' → '+(d.shift||'—'))}</div></div>`:''}
     ${d.kind?`<div class="kindbox" style="margin-bottom:8px"><span class="dlabel">Kind & true</span><div class="rtext">${esc(d.kind)}</div></div>`:''}
     ${d.text?`<div><span class="dlabel">Notes</span><div class="rtext">${esc(d.text)}</div></div>`:''}`;
 }
@@ -1332,65 +1352,156 @@ function deleteDoc(id){
 }
 
 /* =============== analysis =============== */
-function renderAnalysis(){
+function ratedDays(){
   const D=ds();
+  return Object.keys(D.reflections).filter(dk=>{const d=getDay(dk);return d&&d.rating;}).sort();
+}
+function dkOffset(n){ // n days ago → key
+  const d=new Date(); d.setDate(d.getDate()-n);
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+function weekStartKey(dk){
+  const [y,m,da]=dk.split('-').map(Number);
+  const d=new Date(y,m-1,da);
+  d.setDate(d.getDate()-((d.getDay()+6)%7)); // Monday
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+function renderAnalysis(){
   const el=document.getElementById('analysis');
-  const acts=[]; // flat: {mins, energy, dow, hour, cat, catLabel, sub, subLabel, day}
-  D.entries.forEach(e=>{
-    let cursor=new Date(e.start);
-    e.activities.forEach(a=>{
-      acts.push({mins:a.minutes,energy:a.energy,dow:cursor.getDay(),hour:cursor.getHours(),
-        cat:a.category,catLabel:a.categoryLabel||D.cat(a.category).label,sub:a.sub,subLabel:a.subLabel,day:dayKey(cursor.toISOString())});
-      cursor=new Date(cursor.getTime()+a.minutes*60000);
-    });
+  const days=ratedDays();
+  if(!days.length){
+    el.innerHTML='<div class="empty"><strong>Nothing to show yet</strong>Rate a few days in the Journal and this page fills in.</div>';
+    return;
+  }
+  el.innerHTML = spiralCard(days) + habitCard() + goodDayCard(days) + gratitudeCard();
+}
+
+/* ---- 1. spiral up ---- */
+function spiralCard(days){
+  const N=42;
+  const keys=[]; for(let i=N-1;i>=0;i--)keys.push(dkOffset(i));
+  const pts=keys.map(dk=>{const d=getDay(dk);return {dk,r:(d&&d.rating)||null};});
+  const have=pts.filter(p=>p.r);
+  if(have.length<2){
+    return `<div class="anacard"><h3>Spiral</h3>
+      <p style="font-size:.86rem;color:var(--graphite);line-height:1.5">Rate at least two days and your trend line appears here.</p></div>`;
+  }
+  // geometry
+  const W=320,H=150,L=22,R=312,T=12,B=128;
+  const x=i=>L+(R-L)*(i/(N-1));
+  const y=r=>B-(B-T)*((r-1)/9);
+  // rolling 7-day average over available ratings
+  const roll=[];
+  pts.forEach((p,i)=>{
+    const win=pts.slice(Math.max(0,i-6),i+1).filter(q=>q.r);
+    roll.push(win.length>=2?win.reduce((s,q)=>s+q.r,0)/win.length:null);
   });
-  if(!acts.length){el.innerHTML='<div class="empty"><strong>Nothing to analyze yet</strong>Log a few days and patterns will show up here.</div>';return;}
-  const rated=acts.filter(a=>a.energy);
-  const pct=(list)=>{const A=list.filter(a=>a.energy==='ana').reduce((s,a)=>s+a.mins,0);
-    const C=list.filter(a=>a.energy==='cata').reduce((s,a)=>s+a.mins,0);
-    return (A+C)?Math.round(A/(A+C)*100):null;};
-  // week/month
-  const now=new Date();const wkStart=new Date(now);wkStart.setDate(now.getDate()-((now.getDay()+6)%7));wkStart.setHours(0,0,0,0);
-  const moKey=now.getFullYear()+'-'+pad(now.getMonth()+1);
-  const wkPct=pct(rated.filter(a=>new Date(a.day)>=wkStart));
-  const moPct=pct(rated.filter(a=>a.day.startsWith(moKey)));
-  const allPct=pct(rated);
-  // by day of week
-  const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const dowRows=DOW.map((l,i)=>({l,p:pct(rated.filter(a=>a.dow===i))})).filter(r=>r.p!=null);
-  // by hour
-  const hourRows=[];
-  for(let h=0;h<24;h++){const p=pct(rated.filter(a=>a.hour===h));if(p!=null)hourRows.push({l:(h%12||12)+(h<12?'a':'p'),p});}
-  // categories
-  const totalMins=acts.reduce((s,a)=>s+a.mins,0);
-  const daysCount=new Set(acts.map(a=>a.day)).size||1;
-  const catAgg={};
-  acts.forEach(a=>{const k=a.cat;(catAgg[k]||={label:a.catLabel,mins:0,ana:0,cata:0});catAgg[k].mins+=a.mins;
-    if(a.energy==='ana')catAgg[k].ana+=a.mins;if(a.energy==='cata')catAgg[k].cata+=a.mins;});
-  const subAgg={};
-  acts.filter(a=>a.sub).forEach(a=>{const k=a.cat+'.'+a.sub;(subAgg[k]||={label:(a.catLabel)+' › '+(a.subLabel||a.sub),mins:0,ana:0,cata:0});
-    subAgg[k].mins+=a.mins;if(a.energy==='ana')subAgg[k].ana+=a.mins;if(a.energy==='cata')subAgg[k].cata+=a.mins;});
-  const aggRows=(agg)=>Object.values(agg).sort((a,b)=>b.mins-a.mins).slice(0,8).map(r=>{
-    const rp=(r.ana+r.cata)?Math.round(r.ana/(r.ana+r.cata)*100):null;
-    return `<tr><td>${esc(r.label)}</td><td class="num">${(100*r.mins/totalMins).toFixed(0)}% of time</td>
-      <td class="num">${(r.mins/60/daysCount).toFixed(1)}h/day</td>
-      <td class="num ${rp!=null&&rp>=50?'pos':''}">${rp!=null?rp+'% ana':'—'}</td></tr>`;}).join('');
-  const bar=(rows)=>rows.map(r=>`<div class="brow"><span class="bl">${r.l}</span>
-    <div class="btrack"><div class="bfill" style="width:${r.p}%"></div><div class="bfill c" style="width:${100-r.p}%"></div></div>
-    <span class="bv">${r.p}%</span></div>`).join('');
-  el.innerHTML=`
-    <div class="anacard"><h3>Positive (anabolic) energy</h3>
-      <div class="bigpcts">
-        <div class="bigpct"><div class="n">${wkPct!=null?wkPct+'%':'—'}</div><div class="l">this week</div></div>
-        <div class="bigpct"><div class="n">${moPct!=null?moPct+'%':'—'}</div><div class="l">this month</div></div>
-        <div class="bigpct"><div class="n">${allPct!=null?allPct+'%':'—'}</div><div class="l">all time</div></div>
-      </div></div>
-    ${dowRows.length?`<div class="anacard"><h3>By day of week</h3>${bar(dowRows)}</div>`:''}
-    ${hourRows.length?`<div class="anacard"><h3>By hour of day</h3>${bar(hourRows)}</div>`:''}
-    <div class="anacard"><h3>Categories — share of time & energy</h3><table class="tbl">${aggRows(catAgg)}</table></div>
-    ${Object.keys(subAgg).length?`<div class="anacard"><h3>Subcategories</h3><table class="tbl">${aggRows(subAgg)}</table></div>`:''}
-    <div class="anacard"><h3>Daily AI reflection</h3>
-      <p style="font-size:.85rem;color:var(--graphite);line-height:1.5">Coming soon — a daily model-written synthesis of your entries, states, and reflections.</p></div>`;
+  let path='',started=false;
+  roll.forEach((v,i)=>{ if(v==null){started=false;return;}
+    path += (started?' L ':' M ')+x(i).toFixed(1)+' '+y(v).toFixed(1); started=true; });
+  const dots=pts.map((p,i)=>p.r?`<circle cx="${x(i).toFixed(1)}" cy="${y(p.r).toFixed(1)}" r="2.6" fill="${ratingColor(p.r)}"/>`:'').join('');
+  const grid=[1,5,10].map(r=>`<line x1="${L}" y1="${y(r)}" x2="${R}" y2="${y(r)}" stroke="var(--line)" stroke-width="1"/>
+    <text x="${L-5}" y="${y(r)+3}" text-anchor="end" font-size="7" fill="var(--graphite)" font-family="monospace">${r}</text>`).join('');
+  // weekly floors
+  const byWeek={};
+  days.forEach(dk=>{const d=getDay(dk);(byWeek[weekStartKey(dk)] ||= []).push(d.rating);});
+  const weeks=Object.keys(byWeek).sort().slice(-5);
+  const floors=weeks.map(w=>({w,low:Math.min(...byWeek[w]),avg:byWeek[w].reduce((s,v)=>s+v,0)/byWeek[w].length}));
+  let verdict='';
+  if(floors.length>=3){
+    const firstHalf=floors.slice(0,Math.floor(floors.length/2)).map(f=>f.low);
+    const lastHalf=floors.slice(-Math.floor(floors.length/2)).map(f=>f.low);
+    const a=firstHalf.reduce((s,v)=>s+v,0)/firstHalf.length, b=lastHalf.reduce((s,v)=>s+v,0)/lastHalf.length;
+    verdict = b>a+0.3 ? 'Your floor is rising — the low days are getting less low.'
+            : b<a-0.3 ? 'Your floor has dipped recently. Worth a look at what changed.'
+            : 'Your floor is holding steady.';
+  }
+  const fmtWk=w=>{const [y2,m2,d2]=w.split('-').map(Number);return new Date(y2,m2-1,d2).toLocaleDateString(undefined,{month:'short',day:'numeric'});};
+  return `<div class="anacard"><h3>Spiral — last 6 weeks</h3>
+    <div class="chartwrap"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Daily rating trend">
+      ${grid}
+      <path d="${path}" fill="none" stroke="var(--cobalt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      ${dots}
+    </svg></div>
+    <div style="font-family:var(--mono);font-size:.64rem;color:var(--graphite);margin-top:2px">dots = daily rating · line = 7-day average</div>
+    <h3 style="margin-top:16px">Weekly low</h3>
+    ${floors.map(f=>`<div class="floorrow">
+      <span class="wk">week of ${fmtWk(f.w)}</span>
+      <span class="pillnum" style="background:${ratingColor(f.low)}">${f.low}</span>
+      <span class="cmpval">avg ${f.avg.toFixed(1)}</span></div>`).join('')}
+    ${verdict?`<div class="trendline">${verdict}</div>`:''}
+  </div>`;
+}
+
+/* ---- 2. habit consistency ---- */
+function habitCard(){
+  const N=28;
+  const keys=[]; for(let i=N-1;i>=0;i--)keys.push(dkOffset(i));
+  const tk=todayKey();
+  const rows=HABITS.map(hb=>{
+    const on=keys.map(dk=>habitDone(getDay(dk),autoHabits(dk),hb.k));
+    const hits=on.filter(Boolean).length;
+    let streak=0;
+    for(let i=on.length-1;i>=0;i--){ if(on[i])streak++; else if(i<on.length-1)break; }
+    return `<div class="hstrip">
+      <div class="hlabel"><b>${hb.label}</b><span>${hits}/${N} days${streak>1?' · 🔥'+streak:''}</span></div>
+      <div class="hdots">${keys.map((dk,i)=>`<div class="hdot ${on[i]?'on':''} ${dk===tk?'today':''}"></div>`).join('')}</div>
+    </div>`;
+  }).join('');
+  return `<div class="anacard"><h3>Habits — last 4 weeks</h3>${rows}
+    <div style="font-family:var(--mono);font-size:.64rem;color:var(--graphite)">oldest → today</div></div>`;
+}
+
+/* ---- 3. what good days have in common ---- */
+function goodDayCard(days){
+  const good=days.filter(dk=>getDay(dk).rating>=7);
+  const hard=days.filter(dk=>getDay(dk).rating<=4);
+  if(good.length<2||hard.length<2){
+    return `<div class="anacard"><h3>What your good days have in common</h3>
+      <p style="font-size:.86rem;color:var(--graphite);line-height:1.5">Needs at least 2 days rated 7+ and 2 rated 4 or below. So far: ${good.length} good, ${hard.length} hard.</p></div>`;
+  }
+  const metrics=[
+    {name:'Moved your body', f:dk=>habitDone(getDay(dk),autoHabits(dk),'move')},
+    {name:'Reached out to someone', f:dk=>habitDone(getDay(dk),autoHabits(dk),'reach')},
+    {name:'Meditated', f:dk=>habitDone(getDay(dk),autoHabits(dk),'meditate')},
+    {name:'Wrote gratitude', f:dk=>{const d=getDay(dk);return (d.gratitude||[]).some(g=>g&&g.trim());}},
+    {name:'Set an intention', f:dk=>!!(getDay(dk).intention||'').trim()},
+  ];
+  const pctOf=(list,f)=>Math.round(100*list.filter(f).length/list.length);
+  const rows=metrics.map(m=>{
+    const g=pctOf(good,m.f), b=pctOf(hard,m.f);
+    return {name:m.name,g,b,gap:g-b};
+  }).sort((a,b)=>b.gap-a.gap);
+  const top=rows[0];
+  return `<div class="anacard"><h3>What your good days have in common</h3>
+    <div class="cmplegend"><span><i style="background:var(--ana)"></i>days rated 7+ (${good.length})</span>
+      <span><i style="background:var(--cata)"></i>days rated ≤4 (${hard.length})</span></div>
+    ${rows.map(r=>`<div class="cmprow">
+      <span class="mname">${r.name}</span>
+      <span class="cmpbar"><i style="width:${r.g}%;background:var(--ana)"></i></span><span class="cmpval">${r.g}%</span>
+      <span class="cmpbar"><i style="width:${r.b}%;background:var(--cata)"></i></span><span class="cmpval">${r.b}%</span>
+    </div>`).join('')}
+    ${top.gap>=20?`<div class="trendline"><b>${esc(top.name.toLowerCase())}</b> is the biggest difference — ${top.g}% of your good days versus ${top.b}% of your hard ones.</div>`:''}
+  </div>`;
+}
+
+/* ---- 4. gratitude wall (last 7 days) ---- */
+function gratitudeCard(){
+  const items=[];
+  for(let i=0;i<7;i++){
+    const dk=dkOffset(i);
+    const d=getDay(dk);
+    if(!d)continue;
+    (d.gratitude||[]).filter(g=>g&&g.trim()).forEach(g=>items.push({dk,g}));
+  }
+  if(!items.length){
+    return `<div class="anacard"><h3>Gratitude — last 7 days</h3>
+      <p style="font-size:.86rem;color:var(--graphite);line-height:1.5">Nothing written this week yet.</p></div>`;
+  }
+  return `<div class="anacard gwall"><h3>Gratitude — last 7 days</h3>
+    ${items.map(it=>`<div class="gitem">
+      <div class="gday">${dayLabel(it.dk).split(' · ')[0]}</div>
+      <div class="gtext">${esc(it.g)}</div></div>`).join('')}</div>`;
 }
 
 /* =============== category manager =============== */
