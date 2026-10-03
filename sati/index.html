@@ -183,6 +183,50 @@ section.view.active{display:block}
 .subtag{font-size:.72rem;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
 .inlineadd{display:flex;gap:8px;margin-top:8px}
 .inlineadd input{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--paper);font-size:.88rem}
+/* calendar */
+.calwrap{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:14px 0}
+.calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.calhead h3{font-size:.95rem;font-weight:900}
+.calhead button{color:var(--cobalt);font-weight:700;font-size:1rem;padding:4px 10px}
+.caldow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.caldow span{text-align:center;font-family:var(--mono);font-size:.6rem;color:var(--graphite)}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.calcell{aspect-ratio:1;border-radius:8px;background:var(--paper);border:1px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);font-size:.72rem;color:var(--graphite);position:relative;padding:0}
+.calcell.has{color:#fff;font-weight:600}
+.calcell.today{border-color:var(--ink)}
+.calcell.sel{outline:2px solid var(--cobalt);outline-offset:1px}
+.calcell .pip{position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.75}
+.calcell.empty{visibility:hidden}
+.callegend{display:flex;align-items:center;gap:6px;margin-top:10px;font-family:var(--mono);font-size:.62rem;color:var(--graphite)}
+.callegend .sw{width:14px;height:8px;border-radius:3px}
+/* daily entry */
+.dcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.dsec{margin-bottom:16px}
+.dsec:last-child{margin-bottom:0}
+.dlabel{font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--graphite);margin-bottom:6px;display:block}
+.dhint{font-size:.76rem;color:var(--graphite);line-height:1.45;margin:-2px 0 7px;font-style:italic}
+.dcard input[type=text],.dcard textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper);font-size:.92rem}
+.dcard textarea{min-height:60px}
+.ratingrow{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.ratingrow button{padding:9px 0;border-radius:8px;border:1px solid var(--line);background:var(--paper);font-family:var(--mono);font-size:.8rem;font-weight:600}
+.ratingrow button.sel{color:#fff;border-color:transparent}
+.habits{display:flex;flex-direction:column;gap:7px}
+.habit{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--paper);text-align:left;width:100%}
+.habit.done{background:var(--ana-soft);border-color:#BFE5D2}
+.habit .box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;background:var(--card)}
+.habit.done .box{background:var(--ana);border-color:var(--ana)}
+.habit .hname{font-size:.9rem;font-weight:500;flex:1}
+.habit .hauto{font-family:var(--mono);font-size:.62rem;color:var(--ana);background:var(--ana-soft);padding:2px 7px;border-radius:999px}
+.gslot{margin-bottom:7px}
+.addmore{color:var(--cobalt);font-weight:700;font-size:.82rem;padding:4px 0}
+.breathe{background:var(--cobalt-soft);border-radius:10px;padding:10px 12px;font-size:.8rem;line-height:1.45;color:var(--cobalt);margin-bottom:9px}
+.kindbox{background:var(--gold-soft);border:1px solid #F0DDBB;border-radius:10px;padding:12px;margin-bottom:16px}
+.kindbox .dlabel{color:#8A6420}
+.kindbox .dhint{color:#8A6420;opacity:.85}
+.daymeta{font-family:var(--mono);font-size:.66rem;color:var(--graphite);margin-top:10px}
+.tolink{color:var(--cobalt);font-weight:700;font-size:.78rem;padding:2px 4px}
+.arowline.flash{animation:flash 1.6s ease-out}
+@keyframes flash{0%,40%{box-shadow:0 0 0 3px var(--cobalt)}100%{box-shadow:0 0 0 0 transparent}}
 .viewmore{width:100%;text-align:center;color:var(--cobalt);font-weight:700;font-size:.85rem;padding:12px}
 .empty{text-align:center;color:var(--graphite);padding:60px 20px;font-size:.95rem;line-height:1.6}
 .empty strong{display:block;font-weight:900;font-size:1.2rem;color:var(--ink);margin-bottom:6px}
@@ -200,7 +244,7 @@ section.view.active{display:block}
 
 <main>
   <!-- LOG / HOME -->
-  <section class="view active" id="view-log">
+  <section class="view" id="view-log">
     <div class="stats">
       <div class="stat"><div class="n" id="stLogged">—</div><div class="l">today logged</div></div>
       <div class="stat ana"><div class="n" id="stAna">—</div><div class="l">today anabolic</div></div>
@@ -228,8 +272,9 @@ section.view.active{display:block}
   <section class="view" id="view-timeline"><div id="timeline"></div></section>
 
   <!-- JOURNAL -->
-  <section class="view" id="view-journal">
-    <div class="jsec">Daily reflection</div>
+  <section class="view active" id="view-journal">
+    <div id="calendar"></div>
+    <div class="jsec" id="dayTitle">Today</div>
     <div id="todayReflect"></div>
     <div class="jsec">Notes & documents <button class="rhead-btn" style="color:var(--cobalt);font-weight:700;font-size:.85rem;margin-left:8px" onclick="newDoc()">+ New</button></div>
     <div id="docs"></div>
@@ -278,9 +323,9 @@ section.view.active{display:block}
 </main>
 
 <nav>
-  <button id="tab-log" class="active" onclick="showView('log')">Log</button>
+  <button id="tab-log" onclick="showView('log')">Log</button>
   <button id="tab-timeline" onclick="showView('timeline')">Timeline</button>
-  <button id="tab-journal" onclick="showView('journal')">Journal</button>
+  <button id="tab-journal" class="active" onclick="showView('journal')">Journal</button>
   <button id="tab-analysis" onclick="showView('analysis')">Analysis</button>
   <button id="tab-settings" onclick="showView('settings')">Settings</button>
 </nav>
@@ -436,7 +481,7 @@ async function syncAll(manual){
     const uidS=session.user.id;
     if(store.entries.length)for(let i=0;i<store.entries.length;i+=100){
       const {error}=await sb.from('entries').upsert(store.entries.slice(i,i+100).map(entryRow));if(error)throw error;}
-    const refRows=Object.entries(store.reflections).map(([day,r])=>({user_id:uidS,day,text:r.text,shared:!!r.shared,updated_at:r.updatedAt}));
+    const refRows=Object.entries(store.reflections).map(([day,r])=>({user_id:uidS,day,text:r.text||'',data:r.data||null,shared:!!r.shared,updated_at:r.updatedAt}));
     if(refRows.length){const {error}=await sb.from('reflections').upsert(refRows);if(error)throw error;}
     if(store.documents.length){const {error}=await sb.from('documents').upsert(store.documents.map(d=>({id:d.id,user_id:uidS,title:d.title,body:d.body,shared:!!d.shared,created_at:d.createdAt,updated_at:d.updatedAt})));if(error)throw error;}
     const myEmail=session.user.email.toLowerCase();
@@ -450,7 +495,7 @@ async function syncAll(manual){
     store.entries=Object.values(byId).sort((a,b)=>new Date(a.start)-new Date(b.start));
     (await pull('reflections',sb.from('reflections').select('*').eq('user_id',uidS))).forEach(r=>{
       const loc=store.reflections[r.day];
-      if(!loc||new Date(r.updated_at)>new Date(loc.updatedAt))store.reflections[r.day]={text:r.text,shared:r.shared,updatedAt:r.updated_at};});
+      if(!loc||new Date(r.updated_at)>new Date(loc.updatedAt))store.reflections[r.day]={text:r.text,data:r.data||null,shared:r.shared,updatedAt:r.updated_at};});
     const docsById=Object.fromEntries(store.documents.map(d=>[d.id,d]));
     (await pull('documents',sb.from('documents').select('*').eq('user_id',uidS))).forEach(r=>{
       const loc=docsById[r.id];
@@ -518,7 +563,7 @@ async function viewJournal(ownerId,label){
   const {data:st}=await sb.from('user_settings').select('*').eq('user_id',ownerId).maybeSingle();
   viewerData={
     entries:ents.map(rowEntry).sort((a,b)=>new Date(a.start)-new Date(b.start)),
-    reflections:Object.fromEntries((refs||[]).map(r=>[r.day,{text:r.text,shared:true,updatedAt:r.updated_at}])),
+    reflections:Object.fromEntries((refs||[]).map(r=>[r.day,{text:r.text,data:r.data||null,shared:true,updatedAt:r.updated_at}])),
     documents:(docs||[]).map(d=>({id:d.id,title:d.title,body:d.body,shared:true,createdAt:d.created_at,updatedAt:d.updated_at})),
     comments:(coms||[]).map(r=>({id:r.id,activityId:r.activity_id,targetType:r.target_type||'activity',entryId:r.entry_id,author:r.author_email,text:r.text,starred:r.starred,createdAt:r.created_at})),
     categories:(st&&st.categories)||structuredClone(DEFAULT_CATS),
@@ -571,7 +616,12 @@ function streakDays(matchFn){
 }
 function computeStreak(pick){
   let days;
-  if(pick==='journal')days=new Set(Object.keys(store.reflections).filter(k=>store.reflections[k].text));
+  if(pick.startsWith('habit:')){
+    const k=pick.slice(6);
+    const cand=new Set([...Object.keys(store.reflections),...store.entries.map(e=>dayKey(e.start))]);
+    days=new Set([...cand].filter(dk=>habitDone(getDay(dk),autoHabits(dk),k)));
+  }
+  else if(pick==='journal')days=new Set(Object.keys(store.reflections).filter(k=>dayHasContent(getDay(k))));
   else if(pick.startsWith('cat:')){const c=pick.slice(4);days=streakDays(a=>a.category===c);}
   else{const [c,s]=pick.slice(4).split('.');days=streakDays(a=>a.category===c&&a.sub===s);}
   if(pick.startsWith('sub:')){const [c,s]=pick.slice(4).split('.');days=streakDays(a=>a.category===c&&a.sub===s);}
@@ -582,6 +632,7 @@ function computeStreak(pick){
 }
 function pickLabel(pick){
   if(pick==='journal')return 'Journal';
+  if(pick.startsWith('habit:'))return ({meditate:'Meditate',move:'Move',reach:'Reach out'})[pick.slice(6)]||pick;
   if(pick.startsWith('cat:'))return catById(pick.slice(4)).label;
   const [c,s]=pick.slice(4).split('.');
   const cat=catById(c);const sub=(cat.subs||[]).find(x=>x.id===s);
@@ -593,7 +644,7 @@ function renderStreaks(){
 }
 function renderStreakPicker(){
   const el=document.getElementById('streakPicker');if(!el)return;
-  const opts=[{v:'journal',l:'Journal entries'}];
+  const opts=[{v:'journal',l:'Journal entries'},{v:'habit:meditate',l:'Habit · Meditate'},{v:'habit:move',l:'Habit · Move body'},{v:'habit:reach',l:'Habit · Reach out'}];
   store.categories.forEach(c=>{opts.push({v:'cat:'+c.id,l:c.label});
     (c.subs||[]).forEach(s=>opts.push({v:'sub:'+c.id+'.'+s.id,l:c.label+' › '+s.label}));});
   el.innerHTML=opts.map(o=>`<button class="${store.streakPicks.includes(o.v)?'sel':''}" onclick="toggleStreak('${o.v}')">${esc(o.l)}</button>`).join('');
@@ -793,6 +844,51 @@ function threadHtml(targetId,targetType,entryId,coms){
       <button onclick="addComment('${targetId}','${targetType}','${entryId||''}')">Post</button>
     </div>`;
 }
+function setComFilter(f){comFilter=f;showAllComments=false;renderJournal();}
+function renderComments(){
+  const D=ds();
+  const ownerEmail=viewing?viewing.label:((session&&session.user.email)||'me');
+  const filters=[['all','All'],['star','★ Starred'],['coach','Coach']];
+  document.getElementById('comFilters').innerHTML=filters.map(([v,l])=>
+    `<button class="${comFilter===v?'sel':''}" onclick="setComFilter('${v}')">${l}</button>`).join('');
+  const ctx={};
+  D.entries.forEach(e=>e.activities.forEach(a=>{
+    ctx[a.id]={label:a.description||(a.categoryLabel||D.cat(a.category).label),day:dayKey(e.start)};}));
+  D.documents.forEach(d=>{ctx[d.id]={label:d.title||'Untitled',day:dayKey(d.updatedAt||d.createdAt)};});
+  let list=[...D.comments].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+  if(comFilter==='star')list=list.filter(c=>c.starred);
+  if(comFilter==='coach')list=list.filter(c=>(c.author||'')&&(c.author||'').toLowerCase()!==ownerEmail.toLowerCase());
+  const el=document.getElementById('comList');
+  if(!list.length){el.innerHTML='<p style="color:var(--graphite);font-size:.88rem">'+(comFilter==='all'?'No comments yet — open a timeline row or a day to leave one.':comFilter==='star'?'No gold-starred comments yet.':'No coach comments yet.')+'</p>';return;}
+  const shown=showAllComments?list:list.slice(0,5);
+  el.innerHTML='<div class="reflect">'+shown.map(c=>{
+    const t=c.targetType||'activity';
+    const cx=(t==='reflection')?{label:'Daily entry',day:c.activityId}:ctx[c.activityId];
+    const link=(t==='reflection')?'open that day →':(t==='document')?'open document →':'see it in timeline →';
+    return `<div class="comment ${c.starred?'starred':''}">
+      <button class="star" onclick="toggleStar('${c.id}')" aria-label="Star">★</button>
+      <div class="cbody">${esc(c.text)}
+        <div class="cmeta">${esc(c.author||'')} · ${fmtDate(c.createdAt)}${cx?' · on “'+esc(cx.label)+'” ('+dayLabel(cx.day).split(' · ')[0]+')':''}</div></div>
+      <button class="cdel" onclick="deleteComment('${c.id}')">✕</button>
+    </div>
+    <div style="margin:-6px 0 8px 30px"><button class="tolink" onclick="gotoComment('${c.id}')">${link}</button></div>`;}).join('')+'</div>'
+    +(list.length>5&&!showAllComments?`<button class="viewmore" onclick="showAllComments=true;renderJournal()">View ${list.length-5} more</button>`:'');
+}
+function gotoComment(cid){
+  const c=ds().comments.find(x=>x.id===cid); if(!c)return;
+  const t=c.targetType||'activity';
+  if(t==='reflection'){ selDay=c.activityId; showView('journal');
+    setTimeout(()=>{const el=document.getElementById('dayTitle'); if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},90); return; }
+  if(t==='document'){ openThreads.add(c.activityId); showView('journal');
+    setTimeout(()=>{const el=document.getElementById('docs'); if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},90); return; }
+  openThreads.add(c.activityId);
+  showView('timeline');
+  setTimeout(()=>{
+    const row=document.getElementById('ar-'+c.activityId);
+    if(row){row.scrollIntoView({behavior:'smooth',block:'center'});row.classList.add('flash');setTimeout(()=>row.classList.remove('flash'),1800);}
+    else toast('That entry is no longer in the timeline');
+  },140);
+}
 function toggleJThread(id){
   if(openThreads.has(id))openThreads.delete(id);else openThreads.add(id);
   renderJournal();
@@ -912,81 +1008,277 @@ function deleteDayEntries(dk){
   if(i>=1&&i<=dayE.length)deleteEntry(dayE[i-1].id);
 }
 
-/* =============== journal (reflections + documents) =============== */
+/* =============== journal: calendar + structured daily entry =============== */
 let editingReflection=null,editingDoc=null,showAllReflects=false,showAllComments=false,comFilter='all';
+let calMonth=null, selDay=null, gratSlots=1;
+
+const HABITS=[
+  {k:'meditate',label:'Meditate 5 min',cat:'spiritual',sub:'meditate'},
+  {k:'move',    label:'Move body 5 min',cat:'fitness',sub:null},
+  {k:'reach',   label:'Reach out to 1 person',cat:'social',sub:null}
+];
+const DRIFTS=['Scrolling','Got high','Vape','Chess','Porn','Stayed up','Avoided work'];
+const SHIFTS=['Stretch','Walk','Calisthenics','Reflect','Healthy snack','Read','Connect','Meditate','Breathe','Create 5 min','Learn 5 min'];
+
+function ratingColor(n){ // 1 → red, 10 → green
+  if(!n) return null;
+  const hue = 8 + (n-1)/9*137;
+  return `hsl(${hue.toFixed(0)} 58% 45%)`;
+}
+function blankDay(){return {text:'',rating:null,ratingWhy:'',intention:'',gratitude:['','',''],drift:'',shift:'',driftNote:'',kind:'',habits:{},shared:false};}
+function getDay(dk){
+  const D=ds();
+  const r=D.reflections[dk];
+  if(!r) return null;
+  const d=Object.assign(blankDay(),r.data||{});
+  d.text=r.text||d.text; d.shared=!!r.shared; d.updatedAt=r.updatedAt;
+  if(!Array.isArray(d.gratitude))d.gratitude=['','',''];
+  while(d.gratitude.length<3)d.gratitude.push('');
+  d.habits=d.habits||{};
+  return d;
+}
+function dayHasContent(d){
+  if(!d) return false;
+  return !!(d.rating||d.text||d.intention||d.ratingWhy||d.drift||d.shift||d.kind||(d.gratitude||[]).some(g=>g&&g.trim()));
+}
+/* auto-detect habits from that day's timeline entries */
+function autoHabits(dk){
+  const D=ds();
+  const found={};
+  D.entries.forEach(e=>{
+    if(dayKey(e.start)!==dk)return;
+    e.activities.forEach(a=>{
+      HABITS.forEach(hb=>{
+        if(a.category!==hb.cat)return;
+        if(hb.sub && a.sub!==hb.sub)return;
+        if(!found[hb.k])found[hb.k]={activityId:a.id,label:a.description||(a.subLabel||a.categoryLabel||'')};
+      });
+    });
+  });
+  return found;
+}
+function habitDone(d,auto,k){
+  if(d && d.habits && d.habits[k]!==undefined && d.habits[k]!==null) return !!d.habits[k];
+  return !!auto[k];
+}
+
+/* ---- persistence (debounced) ---- */
+let saveTimer=null;
+function setDayField(dk,path,val){
+  if(viewing)return;
+  const prev=store.reflections[dk];
+  const data=Object.assign(blankDay(),(prev&&prev.data)||{});
+  if(!Array.isArray(data.gratitude))data.gratitude=['','',''];
+  if(path.startsWith('gratitude.')){data.gratitude[parseInt(path.split('.')[1])]=val;}
+  else if(path.startsWith('habits.')){data.habits=data.habits||{};data.habits[path.split('.')[1]]=val;}
+  else data[path]=val;
+  const text=(path==='text')?val:((prev&&prev.text)||data.text||'');
+  data.text=text;
+  store.reflections[dk]={text,data,shared:!!(prev&&prev.shared),updatedAt:new Date().toISOString()};
+  saveStore();
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    const r=store.reflections[dk];
+    if(sb&&session&&r)push('reflections',{user_id:session.user.id,day:dk,text:r.text,data:r.data,shared:r.shared,updated_at:r.updatedAt});
+    renderStreaks();
+  },800);
+}
+function setRating(dk,n){
+  const cur=getDay(dk);
+  setDayField(dk,'rating',(cur&&cur.rating===n)?null:n);
+  renderJournal();
+}
+function toggleHabit(dk,k){
+  const d=getDay(dk),auto=autoHabits(dk);
+  setDayField(dk,'habits.'+k,!habitDone(d,auto,k));
+  renderJournal();
+}
+function pickDrift(dk,v){const d=getDay(dk);setDayField(dk,'drift',(d&&d.drift===v)?'':v);renderJournal();}
+function pickShift(dk,v){const d=getDay(dk);setDayField(dk,'shift',(d&&d.shift===v)?'':v);renderJournal();}
+function addGratSlot(){gratSlots=Math.min(3,gratSlots+1);renderJournal();}
+
+/* ---- calendar ---- */
+function shiftMonth(n){
+  const [y,m]=calMonth.split('-').map(Number);
+  const d=new Date(y,m-1+n,1);
+  calMonth=d.getFullYear()+'-'+pad(d.getMonth()+1);
+  renderJournal();
+}
+function selectDay(dk){selDay=(selDay===dk)?null:dk;gratSlots=1;renderJournal();
+  setTimeout(()=>{const t=document.getElementById('dayTitle');if(t)t.scrollIntoView({behavior:'smooth',block:'start'});},60);}
+function renderCalendar(){
+  const D=ds();
+  if(!calMonth)calMonth=todayKey().slice(0,7);
+  const [y,m]=calMonth.split('-').map(Number);
+  const first=new Date(y,m-1,1), last=new Date(y,m,0);
+  const lead=first.getDay(), total=last.getDate();
+  const title=first.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+  const tk=todayKey();
+  let cells='';
+  for(let i=0;i<lead;i++)cells+='<div class="calcell empty"></div>';
+  for(let dnum=1;dnum<=total;dnum++){
+    const dk=y+'-'+pad(m)+'-'+pad(dnum);
+    const d=getDay(dk);
+    const col=d&&d.rating?ratingColor(d.rating):null;
+    const hasText=!!(d&&(d.text||(d.gratitude||[]).some(g=>g&&g.trim())));
+    cells+=`<button class="calcell ${col?'has':''} ${dk===tk?'today':''} ${dk===selDay?'sel':''}"
+      ${col?`style="background:${col}"`:''} onclick="selectDay('${dk}')">
+      ${dnum}${hasText?'<span class="pip"></span>':''}</button>`;
+  }
+  document.getElementById('calendar').innerHTML=`<div class="calwrap">
+    <div class="calhead"><button onclick="shiftMonth(-1)">‹</button>
+      <h3>${title}</h3><button onclick="shiftMonth(1)">›</button></div>
+    <div class="caldow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+    <div class="calgrid">${cells}</div>
+    <div class="callegend"><span class="sw" style="background:${ratingColor(2)}"></span>1
+      <span class="sw" style="background:${ratingColor(5)}"></span>5
+      <span class="sw" style="background:${ratingColor(9)}"></span>10
+      <span style="margin-left:auto">• = written entry</span></div>
+  </div>`;
+}
+
+/* ---- the daily entry ---- */
 function renderJournal(){
   const D=ds();
-  const tk=todayKey();
-  document.getElementById('todayReflect').innerHTML=reflectCard(tk,D.reflections[tk],true);
-  const pastKeys=Object.keys(D.reflections).filter(k=>k!==tk).sort().reverse();
+  renderCalendar();
+  const dk=selDay||todayKey();
+  document.getElementById('dayTitle').textContent=dayLabel(dk);
+  document.getElementById('todayReflect').innerHTML=dayEntryCard(dk);
+  const pastKeys=Object.keys(D.reflections).filter(k=>k!==dk&&dayHasContent(getDay(k))).sort().reverse();
   const shownKeys=showAllReflects?pastKeys:pastKeys.slice(0,5);
-  document.getElementById('pastReflects').innerHTML=(pastKeys.length?shownKeys.map(k=>reflectCard(k,D.reflections[k],false)).join(''):'<p style="color:var(--graphite);font-size:.88rem">No past reflections yet.</p>')
+  document.getElementById('pastReflects').innerHTML=(pastKeys.length?shownKeys.map(k=>pastCard(k)).join(''):'<p style="color:var(--graphite);font-size:.88rem">No past entries yet.</p>')
     +(pastKeys.length>5&&!showAllReflects?`<button class="viewmore" onclick="showAllReflects=true;renderJournal()">View ${pastKeys.length-5} more</button>`:'');
   renderComments();
   renderDocs();
 }
-function setComFilter(f){comFilter=f;showAllComments=false;renderJournal();}
-function renderComments(){
-  const D=ds();
-  const ownerEmail=viewing?viewing.label:((session&&session.user.email)||'me');
-  const filters=[['all','All'],['star','★ Starred'],['coach','Coach']];
-  document.getElementById('comFilters').innerHTML=filters.map(([v,l])=>
-    `<button class="${comFilter===v?'sel':''}" onclick="setComFilter('${v}')">${l}</button>`).join('');
-  // context index: activityId → what/where
-  const ctx={};
-  D.entries.forEach(e=>e.activities.forEach(a=>{
-    ctx[a.id]={label:a.description||(a.categoryLabel||D.cat(a.category).label),day:dayKey(e.start)};}));
-  D.documents.forEach(d=>{ctx[d.id]={label:d.title||'Untitled',day:dayKey(d.updatedAt||d.createdAt)};});
-  let list=[...D.comments].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
-  if(comFilter==='star')list=list.filter(c=>c.starred);
-  if(comFilter==='coach')list=list.filter(c=>(c.author||'')&&(c.author||'').toLowerCase()!==ownerEmail.toLowerCase());
-  const el=document.getElementById('comList');
-  if(!list.length){el.innerHTML='<p style="color:var(--graphite);font-size:.88rem">'+(comFilter==='all'?'No comments yet — open a timeline row to leave one.':comFilter==='star'?'No gold-starred comments yet.':'No coach comments yet.')+'</p>';return;}
-  const shown=showAllComments?list:list.slice(0,5);
-  el.innerHTML='<div class="reflect">'+shown.map(c=>{
-    const cx=c.targetType==='reflection'?{label:'Daily reflection',day:c.activityId}:ctx[c.activityId];
-    return `<div class="comment ${c.starred?'starred':''}">
-      <button class="star" onclick="toggleStar('${c.id}')" aria-label="Star">★</button>
-      <div class="cbody">${esc(c.text)}
-        <div class="cmeta">${esc(c.author||'')} · ${fmtDate(c.createdAt)}${cx?' · on “'+esc(cx.label)+'” ('+dayLabel(cx.day).split(' · ')[0]+')':''}</div></div>
-      <button class="cdel" onclick="deleteComment('${c.id}')">✕</button>
-    </div>`;}).join('')+'</div>'
-    +(list.length>5&&!showAllComments?`<button class="viewmore" onclick="showAllComments=true;renderJournal()">View ${list.length-5} more</button>`:'');
-}
-function reflectCard(dk,r,isToday){
-  if(editingReflection===dk&&!viewing){
-    return `<div class="reflect"><div class="rhead"><span>${dayLabel(dk)}</span>
-      <div class="rbtns">
-        <button onclick="toggleReflectShare('${dk}')">${r&&r.shared?'Unshare':'Share w/ coach'}</button>
-        <button onclick="saveReflection('${dk}')">Save</button></div></div>
-      <textarea id="rtext-${dk}" placeholder="How did today feel, zoomed out?">${esc(r?r.text:'')}</textarea></div>`;
-  }
+function dayEntryCard(dk){
+  const d=getDay(dk)||blankDay();
+  const auto=autoHabits(dk);
   const coms=commentsFor(dk);
   const open=openThreads.has(dk);
-  const canComment=!!(r&&r.text);
-  return `<div class="reflect"><div class="rhead"><span>${dayLabel(dk)} ${r&&r.shared?'<span class="sharetag">shared</span>':''}</span>
-    <div class="rbtns">${canComment?`<button onclick="toggleJThread('${dk}')">${open?'▴':'▾'} 💬${coms.length?' '+coms.length:''}</button>`:''}${!viewing?`<button onclick="editReflection('${dk}')">${r&&r.text?'Edit':'Write'}</button>`:''}</div></div>
-    <div class="rtext ${r&&r.text?'':'emptyr'}">${r&&r.text?esc(r.text):(viewing?'Not shared or not written.':'No reflection yet.')}</div>
-    ${open&&canComment?`<div class="cthread" style="display:block;margin-top:10px;border-top:1px dashed var(--line);padding-top:8px">${threadHtml(dk,'reflection','',coms)}</div>`:''}</div>`;
+  if(viewing){
+    return `<div class="dcard">${readOnlyDay(d,dk)}
+      <div class="rhead" style="margin-top:10px"><span></span>
+        <div class="rbtns"><button onclick="toggleJThread('${dk}')">${open?'▴':'▾'} 💬${coms.length?' '+coms.length:''}</button></div></div>
+      ${open?`<div class="cthread" style="display:block;border-top:1px dashed var(--line);padding-top:8px">${threadHtml(dk,'reflection','',coms)}</div>`:''}</div>`;
+  }
+  const filled=(d.gratitude||[]).filter(g=>g&&g.trim()).length;
+  const slots=Math.max(gratSlots,Math.max(1,filled));
+  const needsKind = (d.rating&&d.rating<=5) || (d.drift&&!d.shift);
+  return `<div class="dcard">
+
+  <div class="dsec">
+    <span class="dlabel">Intention for today</span>
+    <input type="text" value="${escAttr(d.intention)}" placeholder="One line. What matters today?"
+      oninput="setDayField('${dk}','intention',this.value)">
+  </div>
+
+  <div class="dsec">
+    <span class="dlabel">Daily habits</span>
+    <div class="habits">${HABITS.map(hb=>{
+      const done=habitDone(d,auto,hb.k);
+      const a=auto[hb.k];
+      return `<button class="habit ${done?'done':''}" onclick="toggleHabit('${dk}','${hb.k}')">
+        <span class="box">${done?'✓':''}</span>
+        <span class="hname">${hb.label}</span>
+        ${a?`<span class="hauto">logged</span>`:''}
+      </button>`;}).join('')}</div>
+  </div>
+
+  <div class="dsec">
+    <span class="dlabel">How was today? 1–10</span>
+    <div class="ratingrow">${[1,2,3,4,5,6,7,8,9,10].map(n=>
+      `<button class="${d.rating===n?'sel':''}" ${d.rating===n?`style="background:${ratingColor(n)}"`:''}
+        onclick="setRating('${dk}',${n})">${n}</button>`).join('')}</div>
+    ${d.rating?`<input type="text" style="margin-top:8px" value="${escAttr(d.ratingWhy)}" placeholder="Why that number?"
+      oninput="setDayField('${dk}','ratingWhy',this.value)">`:''}
+  </div>
+
+  <div class="dsec">
+    <span class="dlabel">Gratitude</span>
+    <div class="dhint">Return to the moment. Feel it, don't just name it.</div>
+    ${Array.from({length:slots}).map((_,i)=>`<div class="gslot">
+      <input type="text" value="${escAttr(d.gratitude[i]||'')}" placeholder="${i===0?'One thing from today…':'Another (optional)'}"
+        oninput="setDayField('${dk}','gratitude.${i}',this.value)"></div>`).join('')}
+    ${slots<3?`<button class="addmore" onclick="addGratSlot()">+ add another</button>`:''}
+  </div>
+
+  <div class="dsec">
+    <span class="dlabel">Drift & shift</span>
+    <div class="breathe">Sit with the drift. Breathe. The peace you're reaching for arises from within.</div>
+    <div class="chips">${DRIFTS.map(v=>`<button class="${d.drift===v?'sel':''}" onclick="pickDrift('${dk}','${v}')">${v}</button>`).join('')}</div>
+    <div style="font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--graphite);margin:10px 0 6px">Shifted to</div>
+    <div class="chips subs">${SHIFTS.map(v=>`<button class="${d.shift===v?'sel':''}" onclick="pickShift('${dk}','${v}')">${v}</button>`).join('')}</div>
+    <input type="text" style="margin-top:8px" value="${escAttr(d.driftNote)}" placeholder="What happened in between? (optional)"
+      oninput="setDayField('${dk}','driftNote',this.value)">
+  </div>
+
+  ${needsKind?`<div class="kindbox">
+    <span class="dlabel">Say something kind and true</span>
+    <div class="dhint">A hard day or a drift you didn't shift out of isn't evidence against you — it's part of the journey. What would you say to a friend here?</div>
+    <textarea placeholder="Talk to me nicely…" oninput="setDayField('${dk}','kind',this.value)">${esc(d.kind)}</textarea>
+  </div>`:''}
+
+  <div class="dsec">
+    <span class="dlabel">Anything else</span>
+    <textarea placeholder="Optional. Let it be short if it wants to be." oninput="setDayField('${dk}','text',this.value)">${esc(d.text)}</textarea>
+  </div>
+
+  <div class="rhead" style="margin-bottom:0">
+    <span class="daymeta">${d.updatedAt?'saved '+fmtTime(d.updatedAt):'autosaves as you type'}</span>
+    <div class="rbtns">
+      <button onclick="jumpToDayTimeline('${dk}')">timeline →</button>
+      <button onclick="toggleDayShare('${dk}')">${d.shared?'Unshare':'Share w/ coach'}</button>
+      <button onclick="toggleJThread('${dk}')">${open?'▴':'▾'} 💬${coms.length?' '+coms.length:''}</button>
+    </div>
+  </div>
+  ${open?`<div class="cthread" style="display:block;margin-top:8px;border-top:1px dashed var(--line);padding-top:8px">${threadHtml(dk,'reflection','',coms)}</div>`:''}
+  </div>`;
 }
-function editReflection(dk){editingReflection=dk;renderJournal();
-  setTimeout(()=>{const t=document.getElementById('rtext-'+dk);if(t)t.focus();},50);}
-function saveReflection(dk){
-  const t=document.getElementById('rtext-'+dk);
-  const prev=store.reflections[dk]||{};
-  store.reflections[dk]={text:t.value.trim(),shared:!!prev.shared,updatedAt:new Date().toISOString()};
-  if(!store.reflections[dk].text)delete store.reflections[dk];
-  saveStore();
-  if(sb&&session&&store.reflections[dk])push('reflections',{user_id:session.user.id,day:dk,text:store.reflections[dk].text,shared:store.reflections[dk].shared,updated_at:store.reflections[dk].updatedAt});
-  editingReflection=null;renderJournal();renderStreaks();toast('Reflection saved ✓');
+function readOnlyDay(d,dk){
+  const auto=autoHabits(dk);
+  const g=(d.gratitude||[]).filter(x=>x&&x.trim());
+  return `${d.rating?`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span style="background:${ratingColor(d.rating)};color:#fff;font-family:var(--mono);font-weight:600;padding:4px 10px;border-radius:999px">${d.rating}/10</span>
+      <span style="font-size:.88rem">${esc(d.ratingWhy)}</span></div>`:''}
+    ${d.intention?`<div style="margin-bottom:8px"><span class="dlabel">Intention</span><div class="rtext">${esc(d.intention)}</div></div>`:''}
+    <div class="habits" style="margin-bottom:10px">${HABITS.map(hb=>{
+      const done=habitDone(d,auto,hb.k);
+      return `<div class="habit ${done?'done':''}"><span class="box">${done?'✓':''}</span><span class="hname">${hb.label}</span></div>`;}).join('')}</div>
+    ${g.length?`<div style="margin-bottom:8px"><span class="dlabel">Grateful for</span>${g.map(x=>`<div class="rtext">• ${esc(x)}</div>`).join('')}</div>`:''}
+    ${(d.drift||d.shift)?`<div style="margin-bottom:8px"><span class="dlabel">Drift → shift</span>
+      <div class="rtext">${esc(d.drift||'—')} → ${esc(d.shift||'—')}${d.driftNote?' · '+esc(d.driftNote):''}</div></div>`:''}
+    ${d.kind?`<div class="kindbox" style="margin-bottom:8px"><span class="dlabel">Kind & true</span><div class="rtext">${esc(d.kind)}</div></div>`:''}
+    ${d.text?`<div><span class="dlabel">Notes</span><div class="rtext">${esc(d.text)}</div></div>`:''}`;
 }
-function toggleReflectShare(dk){
-  const t=document.getElementById('rtext-'+dk);
-  const prev=store.reflections[dk]||{};
-  store.reflections[dk]={text:(t?t.value.trim():prev.text)||'',shared:!prev.shared,updatedAt:new Date().toISOString()};
+function pastCard(dk){
+  const d=getDay(dk)||blankDay();
+  const coms=commentsFor(dk);const open=openThreads.has(dk);
+  const g=(d.gratitude||[]).filter(x=>x&&x.trim());
+  const preview=d.text||d.ratingWhy||g[0]||d.intention||'';
+  return `<div class="reflect">
+    <div class="rhead"><span>${d.rating?`<span style="background:${ratingColor(d.rating)};color:#fff;font-family:var(--mono);padding:1px 8px;border-radius:999px;margin-right:6px">${d.rating}</span>`:''}${dayLabel(dk)} ${d.shared?'<span class="sharetag">shared</span>':''}</span>
+      <div class="rbtns">
+        <button onclick="toggleJThread('${dk}')">${open?'▴':'▾'} 💬${coms.length?' '+coms.length:''}</button>
+        ${!viewing?`<button onclick="selectDay('${dk}')">Open</button>`:''}</div></div>
+    <div class="rtext ${preview?'':'emptyr'}">${preview?esc(preview.slice(0,220))+(preview.length>220?'…':''):'No notes.'}</div>
+    ${open?`<div class="cthread" style="display:block;margin-top:10px;border-top:1px dashed var(--line);padding-top:8px">${threadHtml(dk,'reflection','',coms)}</div>`:''}</div>`;
+}
+function toggleDayShare(dk){
+  const prev=store.reflections[dk]||{text:'',data:blankDay()};
+  store.reflections[dk]={text:prev.text||'',data:prev.data||blankDay(),shared:!prev.shared,updatedAt:new Date().toISOString()};
   saveStore();
-  if(sb&&session)push('reflections',{user_id:session.user.id,day:dk,text:store.reflections[dk].text,shared:store.reflections[dk].shared,updated_at:store.reflections[dk].updatedAt});
-  renderJournal();toast(store.reflections[dk].shared?'Shared with coach':'Now private');
+  const r=store.reflections[dk];
+  if(sb&&session)push('reflections',{user_id:session.user.id,day:dk,text:r.text,data:r.data,shared:r.shared,updated_at:r.updatedAt});
+  renderJournal();toast(r.shared?'Shared with coach':'Now private');
+}
+function jumpToDayTimeline(dk){
+  showView('timeline');
+  setTimeout(()=>{
+    const head=[...document.querySelectorAll('#timeline .day h2')].find(x=>x.textContent===dayLabel(dk));
+    if(head)head.scrollIntoView({behavior:'smooth',block:'start'});
+    else toast('No timeline entries that day');
+  },80);
 }
 function renderDocs(){
   const D=ds();
@@ -1196,7 +1488,7 @@ function toast(msg){
 
 /* =============== boot =============== */
 draft=[blankActivity()];
-initWindow();autoSplit();renderActivities();refreshGap();initCloud();
+initWindow();autoSplit();renderActivities();refreshGap();renderJournal();initCloud();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
 </body>
