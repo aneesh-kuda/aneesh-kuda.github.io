@@ -741,25 +741,20 @@ function renderHomeStats(){
   document.getElementById('stAna').textContent=(ana+cata)?Math.round(ana/(ana+cata)*100)+'%':'—';
   renderStreaks();
 }
-function streakDays(matchFn){
-  const days=new Set();
-  store.entries.forEach(e=>{if(e.activities.some(matchFn))days.add(dayKey(e.start));});
-  return days;
+function dayMatchesPick(dk,pick){
+  if(pick==='journal')return dayHasContent(getDay(dk));
+  if(pick.startsWith('habit:'))return !!autoHabits(dk)[pick.slice(6)];
+  const D=ds();
+  const hit=f=>D.entries.some(e=>dayKey(e.start)===dk&&e.activities.some(f));
+  if(pick.startsWith('cat:')){const c=pick.slice(4);return hit(a=>a.category===c);}
+  if(pick.startsWith('sub:')){const [c,s]=pick.slice(4).split('.');return hit(a=>a.category===c&&a.sub===s);}
+  return false;
 }
 function computeStreak(pick){
-  let days;
-  if(pick.startsWith('habit:')){
-    const k=pick.slice(6);
-    const cand=new Set([...Object.keys(store.reflections),...store.entries.map(e=>dayKey(e.start))]);
-    days=new Set([...cand].filter(dk=>habitDone(getDay(dk),autoHabits(dk),k)));
-  }
-  else if(pick==='journal')days=new Set(Object.keys(store.reflections).filter(k=>dayHasContent(getDay(k))));
-  else if(pick.startsWith('cat:')){const c=pick.slice(4);days=streakDays(a=>a.category===c);}
-  else{const [c,s]=pick.slice(4).split('.');days=streakDays(a=>a.category===c&&a.sub===s);}
-  if(pick.startsWith('sub:')){const [c,s]=pick.slice(4).split('.');days=streakDays(a=>a.category===c&&a.sub===s);}
   let n=0;const d=new Date();
-  if(!days.has(dayKey(d.toISOString())))d.setDate(d.getDate()-1); // today not required yet
-  while(days.has(d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()))){n++;d.setDate(d.getDate()-1);}
+  const k=dt=>dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate());
+  if(!dayMatchesPick(k(d),pick))d.setDate(d.getDate()-1); // today not required yet
+  while(dayMatchesPick(k(d),pick)){n++;d.setDate(d.getDate()-1);}
   return n;
 }
 function pickLabel(pick){
@@ -1507,21 +1502,25 @@ function spiralCard(days){
 
 /* ---- 2. habit consistency ---- */
 function habitCard(){
+  const picks=viewing?HABITS.map(hb=>'habit:'+hb.k):(store.streakPicks||[]);
+  if(!picks.length){
+    return `<div class="anacard"><h3>Consistency — last 4 weeks</h3>
+      <p style="font-size:.86rem;color:var(--graphite);line-height:1.5">No streak counters chosen yet. Pick up to five in Settings — any category, subcategory, or your journal — and they'll show up here.</p></div>`;
+  }
   const N=28;
   const keys=[]; for(let i=N-1;i>=0;i--)keys.push(dkOffset(i));
   const tk=todayKey();
-  const rows=HABITS.map(hb=>{
-    const on=keys.map(dk=>!!autoHabits(dk)[hb.k]);
+  const rows=picks.map(p=>{
+    const on=keys.map(dk=>dayMatchesPick(dk,p));
     const hits=on.filter(Boolean).length;
-    let streak=0;
-    for(let i=on.length-1;i>=0;i--){ if(on[i])streak++; else if(i<on.length-1)break; }
+    const streak=computeStreak(p);
     return `<div class="hstrip">
-      <div class="hlabel"><b>${hb.label}</b><span>${hits}/${N} days${streak>1?' · 🔥'+streak:''}</span></div>
+      <div class="hlabel"><b>${esc(pickLabel(p))}</b><span>${hits}/${N} days${streak>1?' · 🔥'+streak:''}</span></div>
       <div class="hdots">${keys.map((dk,i)=>`<div class="hdot ${on[i]?'on':''} ${dk===tk?'today':''}"></div>`).join('')}</div>
     </div>`;
   }).join('');
-  return `<div class="anacard"><h3>Habits — last 4 weeks</h3>
-    <p style="font-size:.8rem;color:var(--graphite);line-height:1.45;margin:-4px 0 12px">Filled in automatically from what you log in the timeline.</p>${rows}
+  return `<div class="anacard"><h3>Consistency — last 4 weeks</h3>
+    <p style="font-size:.8rem;color:var(--graphite);line-height:1.45;margin:-4px 0 12px">Your chosen streak counters, filled in from what you log. Change them in Settings.</p>${rows}
     <div style="font-family:var(--mono);font-size:.64rem;color:var(--graphite)">oldest → today</div></div>`;
 }
 
